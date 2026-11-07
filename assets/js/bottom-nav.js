@@ -83,34 +83,6 @@
       var topnav = document.querySelector('nav.fixed.top-0') || document.querySelector('nav.fixed');
       if (topnav) {
         topnav.classList.add('gb-topnav');
-        var anchors = topnav.querySelectorAll('a');
-        for (var j = 0; j < anchors.length; j++) {
-          var mark = anchors[j].querySelector('svg');
-          var span = anchors[j].querySelector('span');
-          if (mark && span && anchors[j].className && String(anchors[j].className).indexOf('flex') !== -1) {
-            span.classList.add('gb-hide-mobile');
-            break;
-          }
-        }
-      }
-      var ham = document.querySelectorAll('nav button[onclick*="mobile-menu"]');
-      for (var k = 0; k < ham.length; k++) ham[k].classList.add('gb-hide-mobile');
-      var mm = document.getElementById('mobile-menu');
-      if (mm) mm.classList.add('gb-hide-mobile');
-      var mq = window.matchMedia('(max-width:767px)');
-      if (topnav) {
-        var lastY = window.scrollY || 0, ticking = false;
-        window.addEventListener('scroll', function () {
-          if (!mq.matches) { topnav.classList.remove('gb-nav-up'); return; }
-          if (ticking) return;
-          ticking = true;
-          requestAnimationFrame(function () {
-            var y = window.scrollY || 0;
-            if (y > 96 && y > lastY + 6) topnav.classList.add('gb-nav-up');
-            else if (y < lastY - 6 || y < 96) topnav.classList.remove('gb-nav-up');
-            lastY = y; ticking = false;
-          });
-        }, { passive: true });
       }
       var navEl = document.getElementById('gb-bottom-nav');
       if (navEl) navEl.addEventListener('click', function () {
