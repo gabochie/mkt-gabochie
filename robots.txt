@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://marketing.gabochie.com/sitemap.xml
+Sitemap: https://mkt.gabochie.com/sitemap.xml
