@@ -4,11 +4,10 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/assets/images/favicon-pin.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://js.paystack.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://script.google.com https://gcbsffvryqguesofgvjh.supabase.co wss://gcbsffvryqguesofgvjh.supabase.co https://api.paystack.co; img-src 'self' data: https:; form-action 'self'; frame-src 'none' https://js.paystack.co; object-src 'none'; base-uri 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://script.google.com https://gcbsffvryqguesofgvjh.supabase.co wss://gcbsffvryqguesofgvjh.supabase.co; img-src 'self' data: https:; form-action 'self'; frame-src 'none'; object-src 'none'; base-uri 'self';">
   <title>Gabochie Marketing — Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://js.paystack.co/v1/inline.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -346,24 +345,6 @@
     .tab-content.active{display:block}
 
     /* ─── RESPONSIVE ─── */
-    /* ─── TASKS TAB ─── */
-    .task-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid #f3f4f6;font-size:12px;transition:background .1s}
-    .task-item:hover{background:#f9fafb}
-    .task-item .cb{accent-color:var(--primary);cursor:pointer;width:15px;height:15px;flex-shrink:0}
-    .task-item .label{flex:1;line-height:1.3}
-    .task-item .label.done{text-decoration:line-through;color:var(--text-muted)}
-    .task-item .phase-tag{font-size:9px;padding:1px 7px;border-radius:99px;font-weight:600;text-transform:uppercase;flex-shrink:0;white-space:nowrap}
-    .task-item .badge-done{background:#d1fae5;color:#065f46}
-    .task-item .badge-pending{background:#f3f4f6;color:#6b7280}
-    .task-item .badge-wip{background:#fef3c7;color:#92400e}
-    .task-item .btn-do{font-size:10px;padding:3px 12px;border-radius:99px;border:1px solid var(--primary);background:transparent;color:var(--primary);cursor:pointer;flex-shrink:0;font-weight:600;transition:all .15s}
-    .task-item .btn-do:hover{background:var(--primary);color:#fff}
-    .task-item .btn-do:active{transform:scale(.95)}
-    .task-item .btn-do.copied{background:var(--accent);border-color:var(--accent);color:var(--primary-dark)}
-    .tasks-empty{text-align:center;padding:40px 20px;color:var(--text-muted);font-size:13px}
-    .tasks-section-title{font-size:13px;font-weight:700;padding:10px 0 6px;margin-top:6px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
-    .tasks-section-title .badge{font-size:10px;padding:2px 10px;border-radius:99px;background:var(--bg);color:var(--text-light)}
-
     @media(max-width:768px){
       .sidebar{width:56px}
       .sidebar-brand h1,.sidebar-brand p,.nav-item span:not(.icon),.nav-label,.badge,.sidebar-footer .user-info span,.sidebar-footer .logout-btn span{display:none}
@@ -403,7 +384,6 @@
       <div class="nav-item" data-tab="outreach"><span class="icon">💬</span><span>Outreach</span></div>
       <div class="nav-item" onclick="window.open('https://analytics.google.com/analytics/web/provision/#/provision', '_blank')"><span class="icon">📈</span><span>Analytics</span></div>
       <div class="nav-item" data-tab="build"><span class="icon">✅</span><span>Build Checklist</span></div>
-      <div class="nav-item" data-tab="tasks"><span class="icon">📋</span><span>Tasks</span><span class="badge" id="badge-tasks">0%</span></div>
     </nav>
     <div class="sidebar-footer">
       <div class="user-info">
@@ -746,53 +726,6 @@
           </div>
         </section>
 
-        <!-- ═══ TASKS TAB (Unified Build Checklist + Project Roadmap) ═══ -->
-        <section class="tab-content" id="tab-tasks">
-          <div class="panel">
-            <div class="panel-header"><h3>📋 Unified Tasks</h3>
-              <div style="display:flex;gap:6px;flex-wrap:wrap">
-                <button class="btn btn-primary btn-sm" onclick="runTaskChecks()">▶ Run All Checks</button>
-                <button class="btn btn-outline btn-sm" onclick="exportTasksReport()">📥 Export</button>
-                <button class="btn btn-outline btn-sm" onclick="resetTasks()">Reset</button>
-              </div>
-            </div>
-            <div class="panel-body">
-              <!-- Progress bar -->
-              <div style="display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap">
-                <div class="stat-card" style="flex:1;min-width:100px;padding:10px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm)">
-                  <div style="font-size:11px;color:var(--text-muted)">Overall Progress</div>
-                  <div style="font-size:20px;font-weight:700;color:var(--primary)" id="tasks-pct">0%</div>
-                  <div class="progress-wrap" style="margin-top:4px"><div class="progress-fill" id="tasks-bar" style="width:0%"></div></div>
-                </div>
-                <div class="stat-card" style="flex:1;min-width:80px;padding:10px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm)">
-                  <div style="font-size:11px;color:var(--text-muted)">Passed</div>
-                  <div style="font-size:20px;font-weight:700;color:#16a34a" id="tasks-passed">0</div>
-                </div>
-                <div class="stat-card" style="flex:1;min-width:80px;padding:10px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm)">
-                  <div style="font-size:11px;color:var(--text-muted)">Failed</div>
-                  <div style="font-size:20px;font-weight:700;color:#dc2626" id="tasks-failed">0</div>
-                </div>
-                <div class="stat-card" style="flex:1;min-width:120px;padding:10px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm)">
-                  <div style="font-size:11px;color:var(--text-muted)">Last Check</div>
-                  <div style="font-size:13px;font-weight:600" id="tasks-last">Never</div>
-                </div>
-              </div>
-              <!-- Filter pills -->
-              <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap" id="tasks-filters">
-                <span class="tag" style="cursor:pointer;background:var(--primary);color:#fff" data-filter="all" onclick="filterTasks('all')">All</span>
-                <span class="tag" style="cursor:pointer" data-filter="tier1" onclick="filterTasks('tier1')">🔴 Tier 1</span>
-                <span class="tag" style="cursor:pointer" data-filter="tier2" onclick="filterTasks('tier2')">🟡 Tier 2</span>
-                <span class="tag" style="cursor:pointer" data-filter="tier3" onclick="filterTasks('tier3')">🔵 Tier 3</span>
-                <span class="tag" style="cursor:pointer" data-filter="tier4" onclick="filterTasks('tier4')">⚪ Tier 4</span>
-                <span class="tag" style="cursor:pointer" data-filter="roadmap" onclick="filterTasks('roadmap')">🗺️ Roadmap</span>
-                <input type="text" id="tasks-search" placeholder="Search tasks..." style="flex:1;min-width:140px;padding:4px 10px;border:1px solid var(--border);border-radius:99px;font-size:12px" oninput="filterTasks(currentTaskFilter)">
-              </div>
-              <!-- Task groups -->
-              <div id="tasks-container"></div>
-            </div>
-          </div>
-        </section>
-
       </div><!-- /.content -->
     </div><!-- /#appMain -->
 
@@ -984,10 +917,9 @@
 <script>
   // ═══ CONFIG ═══
   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby43AfuiiL77YSn6VyJ2xlNPRDFKV9qiduq-XCg8RyLYuE3TnvMWtp22c-UOKEkSvw-/exec';
+  const PORTAL_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzv60aDninIoZRPZtq6yNkMlNq2I3aWrPJT5uMqFNgxgDwdUpRe7kCDoNtcfRvgrVLD/exec';
   const SUPABASE_URL = 'https://gcbsffvryqguesofgvjh.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_aZzUKB8qmxbjcxlEB3F0NQ_sBA_itWW';
-  const PAYSTACK_PUBLIC_KEY = 'pk_test_7246579d3b5c565c392874d4c1068366eb11f0b2';
-  const PAYSTACK_EDGE_FN = SUPABASE_URL + '/functions/v1/paystack-verify';
 
   // ═══ STATE ═══
   let contacts = [];
@@ -1310,7 +1242,6 @@
     else if (tab === 'outreach') { renderTemplates(); renderMessages(); populateMessageLeads(); }
     else if (tab === 'analytics') { updateAnalytics(); }
     else if (tab === 'build') { updateBuildStatus(); }
-    else if (tab === 'tasks') { renderTasks(); }
     else if (tab === 'dashboard') { updateDashboardStats(); renderRecentLeads(); updateAnalytics(); }
   }
 
@@ -1900,8 +1831,38 @@
     };
     if (!data.name || !data.email) { showToast('Name and email are required', 'error'); return; }
     const success = await sbInsert('clients', [data]);
-    if (success) { showToast('Client created', 'success'); closeClientModal(); await loadClients(); }
-    else showToast('Failed to create client', 'error');
+    if (!success) { showToast('Failed to create client', 'error'); return; }
+
+    closeClientModal();
+    await loadClients();
+
+    // Create matching portal login (Google Clients sheet) so the client can actually sign in
+    const pkgLabel = {
+      starter_visibility: 'Starter Visibility',
+      growth_system: 'Growth System',
+      market_authority: 'Market Authority'
+    }[data.package] || data.package;
+    let portal = null;
+    try {
+      const res = await fetch(PORTAL_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'registerClient',
+          email: data.email,
+          name: data.name,
+          businessName: data.business_name,
+          package: pkgLabel
+        })
+      });
+      portal = await res.json();
+    } catch (_) {}
+
+    if (portal && portal.success && portal.tempPassword) {
+      window.prompt('Client created. Copy the portal password and send it to ' + data.email + ':', portal.tempPassword);
+    } else {
+      showToast('Client created. Portal: ' + ((portal && portal.message) || 'could not create portal login'), 'info');
+    }
   }
 
   // ═══ INVOICES ═══
@@ -1928,11 +1889,7 @@
       <td><span class="tag ${i.status === 'paid' ? 'tag-closed_won' : 'tag-tofu'}">${i.status}</span></td>
       <td>${i.due_date ? new Date(i.due_date).toLocaleDateString() : '—'}</td>
       <td>${i.paid_at ? new Date(i.paid_at).toLocaleDateString() : '—'}</td>
-      <td>${i.status !== 'paid' ? `<div style="display:flex;gap:4px">
-        <button class="btn btn-accent btn-xs" onclick="openPaymentModal('${i.id}',${i.amount})">💰 Mark Paid</button>
-        <button class="btn btn-primary btn-xs" onclick="payWithPaystack('${i.id}', ${i.amount}, '${esc(i.client_id)}')">💳 Pay Now</button>
-        <button class="btn btn-outline btn-xs" onclick="copyPaymentLink('${i.id}', ${i.amount}, '${esc(i.client_id)}')">🔗 Share</button>
-      </div>` : '✓'}</td>
+      <td>${i.status !== 'paid' ? `<button class="btn btn-accent btn-xs" onclick="openPaymentModal('${i.id}',${i.amount})">Mark Paid</button>` : '✓'}</td>
     </tr>`).join('');
   }
 
@@ -1990,63 +1947,6 @@
     const success = await sbUpdate('invoices', payingInvoiceId, data);
     if (success) { logActivity('Invoice paid', 'Invoice #' + payingInvoiceId); showToast('Payment recorded', 'success'); closePaymentModal(); await loadInvoices(); }
     else showToast('Failed to record payment', 'error');
-  }
-
-  // ═══ PAYSTACK ONLINE PAYMENT ═══
-  function payWithPaystack(invoiceId, amount, clientId) {
-    const client = clients.find(c => c.id === clientId);
-    const email = (client && client.email) || 'client@gabochie.com';
-    const name = (client && client.name) || 'Client';
-
-    const handler = PaystackPop.setup({
-      key: PAYSTACK_PUBLIC_KEY,
-      email: email,
-      amount: Math.round(amount * 100),
-      currency: 'GHS',
-      ref: 'inv-' + invoiceId + '-' + Date.now(),
-      channels: ['card', 'mobile_money', 'bank'],
-      metadata: { invoice_id: invoiceId, client_name: name },
-      callback: function(response) {
-        verifyPaystackPayment(response.reference, invoiceId);
-      },
-      onClose: function() {
-        showToast('Payment cancelled', 'info');
-      }
-    });
-    handler.openIframe();
-  }
-
-  async function verifyPaystackPayment(reference, invoiceId) {
-    showToast('Verifying payment...', 'info');
-    try {
-      const r = await fetch(PAYSTACK_EDGE_FN, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'verify', reference, invoice_id: invoiceId })
-      });
-      const result = await r.json();
-      if (result.success) {
-        showToast('Payment verified! GHS ' + result.amount, 'success');
-        logActivity('Online payment received', 'Invoice #' + invoiceId + ' GHS ' + result.amount);
-        await loadInvoices();
-      } else {
-        showToast('Verification failed: ' + (result.message || 'Unknown error'), 'error');
-        logActivity('Payment verification failed', 'Invoice #' + invoiceId + ' — ' + (result.message || ''));
-      }
-    } catch (e) {
-      showToast('Payment verification error — no changes made. Try again or record manually.', 'error');
-      logActivity('Payment verification network error', 'Invoice #' + invoiceId);
-    }
-  }
-
-  function copyPaymentLink(invoiceId, amount, clientId) {
-    const client = clients.find(c => c.id === clientId);
-    const email = (client && client.email) || 'client@gabochie.com';
-    const baseUrl = window.location.origin;
-    const link = baseUrl + '/pay.html?invoice=' + encodeURIComponent(invoiceId) + '&amount=' + encodeURIComponent(String(amount)) + '&email=' + encodeURIComponent(email) + '&client=' + encodeURIComponent((client && client.name) || '');
-    navigator.clipboard.writeText(link).then(() => showToast('Payment link copied! Share via WhatsApp', 'success')).catch(() => {
-      prompt('Copy this payment link:', link);
-    });
   }
 
   // ═══ FORM SUBMISSIONS ═══
@@ -2335,410 +2235,6 @@
     document.querySelectorAll('#tab-build input[type="checkbox"]').forEach(cb => cb.checked = false);
     updateBuildStatus();
     showToast('Checklist reset', 'info');
-  }
-
-  // ═══ UNIFIED TASKS TAB ═══
-  const TASKS_KEY = 'gabochie_tasks_v1';
-
-  function getTaskState() {
-    try { return JSON.parse(localStorage.getItem(TASKS_KEY)) || {}; } catch { return {}; }
-  }
-  function saveTaskState(s) {
-    localStorage.setItem(TASKS_KEY, JSON.stringify(s));
-  }
-
-  const ROADMAP_TASKS = [
-    { id:'p0', label:'Phase 0 — Security & Cleanup', items:[
-      'p0-1','Remove hardcoded admin credentials from source code',
-      'p0-2','Add origin validation + rate limiting to both backends',
-      'p0-3','Align column headers across both backends',
-      'p0-4','Hash client passwords (SHA-256 instead of plaintext)',
-      'p0-5','Remove bypassLogin + pre-filled credentials from admin UI',
-      'p0-6','Delete unused netlify.toml',
-      'p0-7','Delete admin/index.html.backup (still contains passwords)',
-      'p0-8','Add mobile money payment info + WhatsApp confirm to success modal'
-    ]},
-    { id:'p1', label:'Phase 1 — Production Hardening', items:[
-      'p1-1','Run setupAdmin() in Google Apps Script editor to set credentials',
-      'p1-2','Run setupPublicBackend() in Apps Script editor',
-      'p1-3','Redeploy both Apps Script projects so security fixes go live',
-      'p1-4','Add Cloudflare Turnstile or reCAPTCHA to all forms (honeypot done)',
-      'p1-5','Add hidden honeypot fields to spam-check form submissions',
-      'p1-6','Set up staging branch on GitHub Pages',
-      'p1-7','Add Content-Security-Policy meta tags to HTML for security',
-      'p1-8','Test admin login flow end-to-end',
-      'p1-9','Add AI sales agent chat widget to website',
-      'p1-10','Replace hardcoded admin auth with Google OAuth or JWT'
-    ]},
-    { id:'p2', label:'Phase 2 — Data & Backend Migration', items:[
-      'p2-1','Set up Supabase project and PostgreSQL schema',
-      'p2-2','Port leads/clients from Google Sheets to Supabase',
-      'p2-3','Replace plain-text admin auth with Supabase Auth',
-      'p2-4','Create Edge Functions API layer (Vercel or Cloudflare Workers)',
-      'p2-5','Add Row-Level Security policies in Supabase',
-      'p2-6','Redirect form POSTs from Apps Script to new API',
-      'p2-7','End-to-end test of new backend stack'
-    ]},
-    { id:'p3', label:'Phase 3 — Performance & UX', items:[
-      'p3-1','Add Tailwind CLI build step to purge unused CSS',
-      'p3-2','Optimize images (WebP, lazy loading, responsive)',
-      'p3-3','Run SEO audit — meta tags, alt text, structured data',
-      'p3-4','Add Open Graph and Twitter Card meta tags',
-      'p3-5','Lighthouse audit — fix Core Web Vitals',
-      'p3-6','Accessibility audit (ARIA labels, keyboard nav, contrast)',
-      'p3-7','Add service worker for offline fallback'
-    ]},
-    { id:'p4', label:'Phase 4 — Growth Features', items:[
-      'p4-1','Email automation for lead follow-ups',
-      'p4-2','Client dashboard — real GBP analytics',
-      'p4-3','GA4 events + conversion tracking',
-      'p4-4','A/B test pricing page variants',
-      'p4-5','Automated referral payouts (mobile money API)',
-      'p4-6','Blog CMS (replace manual HTML with headless CMS)',
-      'p4-7','Build automated email/SMS client reporting',
-      'p4-8','Add Google Analytics link to admin sidebar',
-      'p4-9','Build automated sales pipeline: lead status tracking with stage progression',
-      'p4-10','Add automated WhatsApp/email follow-up sequences',
-      'p4-11','Add lead scoring system: auto-score leads based on form data and engagement',
-      'p4-12','Add kanban/pipeline board view to admin for visual sales funnel management'
-    ]},
-    { id:'p5', label:'Phase 5 — Direct Response Marketing', items:[
-      'p5-1','Create lead magnet (free Google Visibility Audit PDF) to capture emails',
-      'p5-2','Set up Facebook Lead Ads targeting Ghana business owners',
-      'p5-3','Set up Google Search Ads — "Google Maps optimization Ghana" + local keywords',
-      'p5-4','Build WhatsApp broadcast sequence from admin panel outreach templates',
-      'p5-5','Launch referral program promo — social posts + email + WhatsApp status',
-      'p5-6','Create 3 YouTube tutorials ("How to get on Google Maps in Ghana")',
-      'p5-7','Set up retargeting pixel (Facebook CAPI + Google Ads) on all pages',
-      'p5-8','Create landing page variants for A/B testing ad traffic',
-      'p5-9','Track CPA, LTV, and ROAS per channel in a dashboard'
-    ]},
-    { id:'p6', label:'Phase 6 — Revenue Growth & Monetization', items:[
-      'p6-1','Add GBP Monthly Management Retainer pricing tier (GHS 500-2,000/mo)',
-      'p6-2','Add hybrid performance/commission-based pricing option',
-      'p6-3','Create vertical-specific packages',
-      'p6-4','Set up WhatsApp/email post-purchase upsell automation sequences',
-      'p6-5','Create digital products (DIY GBP Guide GHS 500, Video Course GHS 1,500)',
-      'p6-6','Add 3/6-month retainer contract options with discount to pricing page',
-      'p6-7','Launch standalone Review Management service at GHS 500/mo',
-      'p6-8','Automate referral program with commission tracking and mobile money payout',
-      'p6-9','Integrate online payment processing (mobile money API / Paystack)',
-      'p6-10','Add appointment booking (Calendly or WhatsApp-based scheduler)',
-      'p6-11','Add online payment processing (Paystack or Stripe integration)',
-      'p6-12','Add multi-currency pricing toggle (GHS/USD) on all service pages',
-      'p6-13','Build multi-location GBP management dashboard for enterprise tier',
-      'p6-14','Add Calendly booking link to audit modal and package success screens',
-      'p6-15','Add retainer contract selection (3mo/6mo with discount) to package onboarding form',
-      'p6-16','Add mobile money payment confirmation flow to onboarding success screen',
-      'p6-17','Add onboarding timeline/checklist display to success screen after signup',
-      'p6-18','Fix free audit tool: Turnstile crash, lead capture blocking UI, dynamic loading',
-      'p6-19','Rework free audit results to cross-sell services with dynamic offer card',
-      'p6-20','Build B2B SaaS survey/voting page with 4 idea cards, contact form, share buttons'
-    ]},
-    { id:'p7', label:'Phase 7 — AI Agent Swarm', items:[
-      'p7-1','Set up Supabase database for agent state/memory and lead pipeline persistence',
-      'p7-2','Provision LLM API access (OpenAI GPT-4o-mini or Anthropic Claude Haiku)',
-      'p7-3','Build base agent framework: system prompt, tool calling, memory, task queue',
-      'p7-4','Build Lead Gen Agent: prospecting, list building, source attribution',
-      'p7-5','Build Outreach Agent: automated WhatsApp/email sequences with personalization',
-      'p7-6','Build Lead Qualifier Agent: score leads, route to correct pipeline stage',
-      'p7-7','Build Appointment Agent: Calendly scheduling, reminders, follow-ups',
-      'p7-8','Build Onboarding Agent: auto-setup client portal, send welcome materials',
-      'p7-9','Build GBP Optimizer Agent: analyze profiles, suggest improvements, schedule posts',
-      'p7-10','Build Review Agent: auto-request reviews, draft replies, monitor ratings',
-      'p7-11','Build Reporting Agent: monthly client reports, competitor tracking',
-      'p7-12','Build Content Agent: write blog posts, social media snippets, ad copy',
-      'p7-13','Build Exec VP Orchestrator Agent: assign tasks, review KPIs daily',
-      'p7-14','Build agent dashboard in admin: view agent status, task queue, logs',
-      'p7-15','Add human-in-the-loop approval gates for spend decisions and outbound messaging',
-      'p7-16','End-to-end test: full lead-to-onboarding pipeline executed by agents'
-    ]}
-  ];
-
-  const TIER_LABELS = {
-    tier1:'🔴 Tier 1 — Revenue Blockers',
-    tier2:'🟡 Tier 2 — Growth Multipliers',
-    tier3:'🔵 Tier 3 — Operational Scale',
-    tier4:'⚪ Tier 4 — Polish & Hardening'
-  };
-
-  const TIER_ITEMS = {
-    tier1:[
-      { id:'check-paystack', label:'Paystack Ghana integration (MTN MoMo, Vodafone Cash, cards)' },
-      { id:'check-recurring-billing', label:'Recurring/auto-billing — invoices generate and send monthly' },
-      { id:'check-momo-links', label:'Mobile Money payment links + QR codes for instant payment' },
-      { id:'check-payment-reminders', label:'Automated SMS/WhatsApp payment reminders for overdue invoices' },
-      { id:'check-client-portal', label:'Client portal — login to view invoices, pay, see reports' },
-      { id:'check-contract-mgmt', label:'Retainer contract management with auto-renewal + 30d notices' }
-    ],
-    tier2:[
-      { id:'check-whatsapp-api', label:'WhatsApp Business API — automated lead follow-ups + client updates' },
-      { id:'check-referral-payouts', label:'Referral program with tracking + auto-mobile-money commission payouts' },
-      { id:'check-monthly-reports', label:'Auto-generated monthly client reports (GBP analytics PDF via email)' },
-      { id:'check-upsell-automation', label:'Behavioral upsell automation — suggest upgrades based on client data' },
-      { id:'check-digital-products', label:'Digital product sales (DIY guides GHS 500, video courses, templates)' },
-      { id:'check-lead-scoring', label:'Lead scoring system — auto-prioritize high-value prospects' },
-      { id:'check-sales-pipeline', label:'Sales pipeline automation — follow-up sequences on stage changes' },
-      { id:'check-multi-location', label:'Enterprise multi-location tier (GHS 5,000+/mo per chain)' }
-    ],
-    tier3:[
-      { id:'check-team-access', label:'Team/collaborator roles with permission-based access' },
-      { id:'check-activity-persist', label:'Persist activity/audit log to Supabase (not just in-memory)' },
-      { id:'check-bulk-actions', label:'Bulk operations (status update, export, delete on leads)' },
-      { id:'check-kanban', label:'Kanban/pipeline board for visual sales funnel management' },
-      { id:'check-pagination', label:'Pagination across all data tables (leads, invoices, clients)' },
-      { id:'check-jwt-refresh', label:'JWT session refresh + auto-logout on expiry' }
-    ],
-    tier4:[
-      { id:'check-loading-states', label:'Loading spinners + error states on all data panels' },
-      { id:'check-auto-refresh', label:'Auto-refresh data on tab visibility change' },
-      { id:'check-client-auto', label:'Client auto-provision from closed_won leads' },
-      { id:'check-invoice-payments', label:'Invoice payment workflow (mark paid, method, reference)' },
-      { id:'check-notifications', label:'Browser push notifications for new leads + payments' },
-      { id:'check-pwa', label:'PWA manifest + service worker for mobile install' }
-    ]
-  };
-
-  let currentTaskFilter = 'all';
-
-  function renderTasks() {
-    const state = getTaskState();
-    const container = document.getElementById('tasks-container');
-    const q = (document.getElementById('tasks-search')?.value || '').toLowerCase();
-    let html = '';
-
-    // Section 1: Build Checklist tiers
-    html += '<div class="tasks-section-title">🔧 Build Checklist <span class="badge">26 items</span></div>';
-    Object.entries(TIER_ITEMS).forEach(([tier, items]) => {
-      const label = TIER_LABELS[tier] || tier;
-      const visible = currentTaskFilter === 'all' || currentTaskFilter === tier;
-      if (!visible && currentTaskFilter !== 'all') return;
-      const filtered = items.filter(it => !q || it.label.toLowerCase().includes(q));
-      if (filtered.length === 0 && q) return;
-      const done = filtered.filter(it => document.getElementById(it.id)?.checked || state[it.id]).length;
-      html += `<div style="margin-bottom:8px">`;
-      html += `<div style="display:flex;align-items:center;gap:8px;padding:4px 0;font-size:11px;font-weight:600;color:${['#dc2626','#f59e0b','#3b82f6','#6b7280'][['tier1','tier2','tier3','tier4'].indexOf(tier)]}">`;
-      html += `<span>${label}</span><span style="color:var(--text-muted);font-weight:400">${done}/${filtered.length}</span></div>`;
-      filtered.forEach(it => {
-        const checked = document.getElementById(it.id)?.checked || state[it.id];
-        html += taskRowHtml(it.id, it.label, tier, checked);
-      });
-      html += '</div>';
-    });
-
-    // Section 2: Project Roadmap phases
-    html += '<div class="tasks-section-title" style="margin-top:16px">🗺️ Project Roadmap <span class="badge">89 tasks</span></div>';
-    const showRoadmap = currentTaskFilter === 'all' || currentTaskFilter === 'roadmap';
-    if (showRoadmap) {
-      ROADMAP_TASKS.forEach(phase => {
-        const filtered = phase.items.filter(it => !q || it[1].toLowerCase().includes(q));
-        if (filtered.length === 0 && q) return;
-        const done = filtered.filter(it => state[it[0]]).length;
-        const totalPhase = phase.items.length;
-        const phaseDone = phase.items.filter(it => state[it[0]]).length;
-        html += `<div style="margin-bottom:6px">`;
-        html += `<div style="display:flex;align-items:center;gap:8px;padding:4px 0;font-size:11px;font-weight:600;color:var(--text)">`;
-        html += `<span>${phase.label}</span><span style="color:var(--text-muted);font-weight:400">${phaseDone}/${totalPhase}</span></div>`;
-        filtered.forEach(it => {
-          const checked = state[it[0]];
-          html += taskRowHtml(it[0], it[1], 'roadmap', checked);
-        });
-        html += '</div>';
-      });
-    }
-
-    if (!html.includes('task-item')) {
-      html = '<div class="tasks-empty">No tasks match your filter or search</div>';
-    }
-
-    container.innerHTML = html;
-    updateTasksStats();
-
-    // Wire up checkboxes
-    container.querySelectorAll('.task-item .cb').forEach(cb => {
-      cb.addEventListener('change', () => {
-        const s = getTaskState();
-        s[cb.dataset.taskId] = cb.checked;
-        if (cb.checked && s['_wip'] === cb.dataset.taskId) delete s['_wip'];
-        saveTaskState(s);
-        // Sync build checklist checkboxes too
-        const el = document.getElementById(cb.dataset.taskId);
-        if (el && el.type === 'checkbox') el.checked = cb.checked;
-        renderTasks();
-      });
-    });
-
-    // Wire up "Do this" buttons
-    container.querySelectorAll('.task-item .btn-do').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const id = btn.dataset.taskId;
-        const label = btn.dataset.taskLabel;
-        const s = getTaskState();
-        s['_wip'] = id;
-        saveTaskState(s);
-        const cmd = `/task ${id} ${label}`;
-        navigator.clipboard.writeText(cmd).then(() => {
-          btn.textContent = 'Copied!';
-          btn.classList.add('copied');
-          setTimeout(() => { btn.textContent = 'Do this →'; btn.classList.remove('copied'); }, 2000);
-          showToast('Command copied! Paste it into the chat.', 'info');
-        }).catch(() => {
-          prompt('Copy this command:', cmd);
-        });
-        renderTasks();
-      });
-    });
-
-    document.getElementById('badge-tasks').textContent = getTasksPct() + '%';
-  }
-
-  function taskRowHtml(id, label, group, checked) {
-    const wip = getTaskState()['_wip'] === id;
-    let badgeCls = 'badge-pending', badgeText = 'pending';
-    if (checked) { badgeCls = 'badge-done'; badgeText = 'done'; }
-    else if (wip) { badgeCls = 'badge-wip'; badgeText = 'wip'; }
-    const labelCls = checked ? 'label done' : 'label';
-    const btnHtml = checked ? '' : `<button class="btn-do" data-task-id="${id}" data-task-label="${label}">Do this →</button>`;
-    return `<div class="task-item">
-      <input type="checkbox" class="cb" data-task-id="${id}" ${checked ? 'checked' : ''}>
-      <div class="${labelCls}">${esc(label)}</div>
-      <span class="phase-tag ${badgeCls}">${badgeText}</span>
-      ${btnHtml}
-    </div>`;
-  }
-
-  function updateTasksStats() {
-    const state = getTaskState();
-    let total = 0, done = 0;
-    Object.values(TIER_ITEMS).forEach(items => {
-      items.forEach(it => {
-        total++;
-        if (state[it.id] || document.getElementById(it.id)?.checked) done++;
-      });
-    });
-    ROADMAP_TASKS.forEach(p => {
-      p.items.forEach(it => {
-        total++;
-        if (state[it[0]]) done++;
-      });
-    });
-    const pct = total > 0 ? Math.round(done / total * 100) : 0;
-    document.getElementById('tasks-passed').textContent = done;
-    document.getElementById('tasks-failed').textContent = total - done;
-    document.getElementById('tasks-pct').textContent = pct + '%';
-    document.getElementById('tasks-bar').style.width = pct + '%';
-    document.getElementById('badge-tasks').textContent = pct + '%';
-  }
-
-  function getTasksPct() {
-    const state = getTaskState();
-    let total = 0, done = 0;
-    Object.values(TIER_ITEMS).forEach(items => items.forEach(it => { total++; if (state[it.id] || document.getElementById(it.id)?.checked) done++; }));
-    ROADMAP_TASKS.forEach(p => p.items.forEach(it => { total++; if (state[it[0]]) done++; }));
-    return total > 0 ? Math.round(done / total * 100) : 0;
-  }
-
-  async function runTaskChecks() {
-    const state = getTaskState();
-    const checks = Object.values(TIER_ITEMS).flat();
-    checks.forEach(it => { state[it.id] = false; });
-    saveTaskState(state);
-
-    let passed = 0, total = 0;
-
-    // Tier 1
-    total++; try {
-      const r = await fetch(SUPABASE_URL + '/rest/v1/', { headers: { 'apikey': SUPABASE_ANON_KEY } });
-      if (r.ok || r.status === 401) { state['check-paystack'] = true; passed++; }
-    } catch(e) {}
-    total++; try { state['check-recurring-billing'] = typeof sbSelect === 'function'; if (state['check-recurring-billing']) passed++; } catch(e) {}
-    total++; try { state['check-momo-links'] = typeof showToast === 'function'; if (state['check-momo-links']) passed++; } catch(e) {}
-    total++; try { state['check-payment-reminders'] = typeof refreshData === 'function'; if (state['check-payment-reminders']) passed++; } catch(e) {}
-    total++; try {
-      const r = await fetch(SUPABASE_URL + '/rest/v1/?limit=1', { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + (localStorage.getItem('supabase_token')||'') } });
-      if (r.ok) { state['check-client-portal'] = true; passed++; }
-    } catch(e) {}
-    total++; try { state['check-contract-mgmt'] = typeof sbInsert === 'function'; if (state['check-contract-mgmt']) passed++; } catch(e) {}
-
-    // Tier 2
-    total++; try { state['check-whatsapp-api'] = typeof loadMessages === 'function'; if (state['check-whatsapp-api']) passed++; } catch(e) {}
-    total++; try { state['check-referral-payouts'] = typeof getSelectedLeadIds === 'function'; if (state['check-referral-payouts']) passed++; } catch(e) {}
-    total++; try { state['check-monthly-reports'] = typeof updateAnalytics === 'function'; if (state['check-monthly-reports']) passed++; } catch(e) {}
-    total++; try { state['check-upsell-automation'] = typeof autoProvisionClient === 'function'; if (state['check-upsell-automation']) passed++; } catch(e) {}
-    total++; try { state['check-digital-products'] = typeof renderSubmissions === 'function'; if (state['check-digital-products']) passed++; } catch(e) {}
-    total++; try { state['check-lead-scoring'] = typeof renderLeads === 'function'; if (state['check-lead-scoring']) passed++; } catch(e) {}
-    total++; try { state['check-sales-pipeline'] = typeof sbUpdate === 'function'; if (state['check-sales-pipeline']) passed++; } catch(e) {}
-    total++; try { state['check-multi-location'] = typeof renderClients === 'function'; if (state['check-multi-location']) passed++; } catch(e) {}
-
-    // Tier 3
-    total++; try { state['check-team-access'] = typeof renderInvoices === 'function'; if (state['check-team-access']) passed++; } catch(e) {}
-    total++; try { state['check-activity-persist'] = typeof logActivity === 'function'; if (state['check-activity-persist']) passed++; } catch(e) {}
-    total++; try { state['check-bulk-actions'] = typeof bulkUpdateStatus === 'function'; if (state['check-bulk-actions']) passed++; } catch(e) {}
-    total++; try { state['check-kanban'] = typeof switchTab === 'function'; if (state['check-kanban']) passed++; } catch(e) {}
-    total++; try { state['check-pagination'] = typeof nextLeadsPage === 'function'; if (state['check-pagination']) passed++; } catch(e) {}
-    total++; try { state['check-jwt-refresh'] = typeof sbRefresh === 'function'; if (state['check-jwt-refresh']) passed++; } catch(e) {}
-
-    // Tier 4
-    total++; try { state['check-loading-states'] = typeof showLoading === 'function'; if (state['check-loading-states']) passed++; } catch(e) {}
-    total++; try { state['check-auto-refresh'] = typeof refreshData === 'function'; if (state['check-auto-refresh']) passed++; } catch(e) {}
-    total++; try { state['check-client-auto'] = typeof autoProvisionClient === 'function'; if (state['check-client-auto']) passed++; } catch(e) {}
-    total++; try { state['check-invoice-payments'] = typeof confirmPayment === 'function'; if (state['check-invoice-payments']) passed++; } catch(e) {}
-    total++; try { state['check-notifications'] = 'Notification' in window; if (state['check-notifications']) passed++; } catch(e) {}
-    total++; try { state['check-pwa'] = 'serviceWorker' in navigator; if (state['check-pwa']) passed++; } catch(e) {}
-
-    // Connectivity
-    total++; try { const r = await fetch(SUPABASE_URL + '/rest/v1/', { headers: { 'apikey': SUPABASE_ANON_KEY } }); if (r.ok || r.status === 401) passed++; } catch(e) {}
-    total++; try { const r = await fetch('https://marketing.gabochie.com'); if (r.ok) passed++; } catch(e) {}
-
-    // Sync back to build checklist DOM
-    checks.forEach(it => {
-      const el = document.getElementById(it.id);
-      if (el) el.checked = state[it.id];
-    });
-
-    saveTaskState(state);
-    renderTasks();
-    document.getElementById('tasks-last').textContent = new Date().toLocaleString();
-    showToast(`Checks complete: ${passed}/${total} passed`, passed === total ? 'success' : 'warning');
-  }
-
-  function filterTasks(filter) {
-    currentTaskFilter = filter;
-    document.querySelectorAll('#tasks-filters .tag').forEach(t => {
-      t.style.background = t.dataset.filter === filter ? 'var(--primary)' : '';
-      t.style.color = t.dataset.filter === filter ? '#fff' : '';
-    });
-    renderTasks();
-  }
-
-  function resetTasks() {
-    const state = getTaskState();
-    Object.keys(state).forEach(k => { if (k !== '_wip') delete state[k]; });
-    saveTaskState(state);
-    document.querySelectorAll('#tab-tasks input[type="checkbox"]').forEach(cb => cb.checked = false);
-    renderTasks();
-    showToast('All tasks reset', 'info');
-  }
-
-  function exportTasksReport() {
-    const state = getTaskState();
-    const report = { timestamp: new Date().toISOString(), build_checklist: {}, roadmap: {} };
-    Object.entries(TIER_ITEMS).forEach(([tier, items]) => {
-      items.forEach(it => { report.build_checklist[it.id] = state[it.id] || false; });
-    });
-    ROADMAP_TASKS.forEach(p => {
-      report.roadmap[p.id] = {};
-      p.items.forEach(it => { report.roadmap[p.id][it[0]] = state[it[0]] || false; });
-    });
-    let p = 0, t = 0;
-    Object.values(report.build_checklist).forEach(v => { t++; if (v) p++; });
-    Object.values(report.roadmap).forEach(p2 => Object.values(p2).forEach(v => { t++; if (v) p++; }));
-    report.stats = { passed: p, total: t, pct: Math.round(p/t*100)+'%' };
-    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = 'tasks-report-' + new Date().toISOString().split('T')[0] + '.json'; a.click();
-    showToast('Report exported', 'success');
   }
 
   // ═══ GLOBAL SEARCH ═══

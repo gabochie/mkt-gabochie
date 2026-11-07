@@ -315,10 +315,10 @@
           return;
         }
         console.error('Failed to load dashboard');
-        loadDemoDashboard();
+        renderLoadError();
       } catch (error) {
         console.error('Error:', error);
-        loadDemoDashboard();
+        renderLoadError();
       }
     }
 
@@ -390,30 +390,21 @@
       }
     }
 
-    function loadDemoDashboard() {
-      updateDashboard({
-        name: client.name || 'Demo Client',
-        package: 'Growth System',
-        businessName: client.businessName || 'Demo Business',
-        startDate: new Date().toISOString().split('T')[0],
-        stats: {
-          views: '1,234',
-          directions: '567',
-          calls: '89',
-          reviews: '24'
-        },
-        phases: {
-          foundation: 'completed',
-          activation: 'in-progress',
-          domination: 'pending'
-        },
-        activity: [
-          { description: 'Google Business Profile claimed and verified', date: '2 days ago' },
-          { description: 'Profile information completed and optimized', date: '1 week ago' },
-          { description: 'Photos uploaded and optimized for search', date: '2 weeks ago' },
-          { description: 'Review generation system activated', date: '3 weeks ago' }
-        ]
+    function renderLoadError() {
+      ['statViews', 'statDirections', 'statCalls', 'statReviews'].forEach(function (id) {
+        document.getElementById(id).textContent = '—';
       });
+      document.getElementById('packageName').textContent = '—';
+      document.getElementById('welcomeName').textContent = client.name || 'Client';
+      document.getElementById('clientName').textContent = client.name || '';
+      document.getElementById('accountBusiness').textContent = client.businessName || '—';
+      document.getElementById('accountEmail').textContent = client.email || '—';
+      document.getElementById('activityList').innerHTML =
+        '<div class="text-center text-gray-500 py-8">' +
+        '<p>We could not load your live dashboard right now.</p>' +
+        '<p class="text-sm mt-2">Please refresh this page. If it continues, ' +
+        '<a href="https://wa.me/233506384917?text=Hi%2C%20my%20client%20dashboard%20is%20not%20loading." target="_blank" rel="noopener" class="text-primary underline">message us on WhatsApp</a>.</p>' +
+        '</div>';
     }
 
     function logout() {
