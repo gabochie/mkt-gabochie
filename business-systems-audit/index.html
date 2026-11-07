@@ -281,6 +281,20 @@
           <div id="res-leaks" class="space-y-3"></div>
         </div>
 
+        <div class="mt-8 border-t border-gray-100 pt-6">
+          <h3 class="font-bold text-[#111827] mb-1">Send me the full picture</h3>
+          <p class="text-sm text-gray-600 mb-4">We'll confirm your score, walk you through the GHS leak model on a free 20-minute debrief, and send your next-step plan. No spam.</p>
+          <form id="lead-form" class="grid sm:grid-cols-2 gap-3" novalidate>
+            <input id="lf-name" type="text" placeholder="Your name *" autocomplete="name" class="border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <input id="lf-biz" type="text" placeholder="Business name" autocomplete="organization" class="border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <input id="lf-phone" type="tel" placeholder="Phone / WhatsApp" autocomplete="tel" class="border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <input id="lf-email" type="email" placeholder="Email (optional)" autocomplete="email" class="border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <button type="submit" id="lf-submit" class="sm:col-span-2 bg-primary text-white px-6 py-3.5 rounded-full font-bold hover:bg-dark-green transition disabled:opacity-60">Send my result</button>
+            <p id="lf-msg" class="sm:col-span-2 text-sm hidden" role="status"></p>
+          </form>
+          <p class="text-xs text-gray-400 mt-2">We only use these details to send your result and arrange the debrief.</p>
+        </div>
+
         <div class="mt-8 grid sm:grid-cols-2 gap-3">
           <a id="res-wa" href="#" target="_blank" rel="noopener" class="text-center bg-primary text-white px-6 py-3.5 rounded-full font-bold hover:bg-dark-green transition">
             Book my free debrief
@@ -506,6 +520,8 @@
   <script>
   (function () {
     'use strict';
+    var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzv60aDninIoZRPZtq6yNkMlNq2I3aWrPJT5uMqFNgxgDwdUpRe7kCDoNtcfRvgrVLD/exec';
+    var lastResult = null;
     var DOMAINS = [
       { key: 'capture',  name: 'Lead capture & response speed', weight: 0.20,
         fix: 'Answer every new lead within 15 minutes and log it in one place.' },
@@ -673,15 +689,83 @@
       document.getElementById('res-mail').href = 'mailto:gabochiemarketing@gmail.com?subject=' +
         encodeURIComponent('My Revenue Leak Scorecard result') + '&body=' + encodeURIComponent(summary);
 
+      var answers = [];
+      for (var a = 0; a < 16; a++) {
+        answers.push(parseInt(document.querySelector('input[name="q' + a + '"]:checked').value, 10));
+      }
+      lastResult = {
+        pct: pct, band: band.name, leakPct: leakPct,
+        top: top.map(function (g) { return g.name; }),
+        answers: answers, summary: summary
+      };
+
       var result = document.getElementById('result');
       result.classList.remove('hidden');
       result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    document.getElementById('lead-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!lastResult) return;
+      var name = document.getElementById('lf-name').value.trim();
+      var biz = document.getElementById('lf-biz').value.trim();
+      var phone = document.getElementById('lf-phone').value.trim();
+      var email = document.getElementById('lf-email').value.trim();
+      var msg = document.getElementById('lf-msg');
+      var btn = document.getElementById('lf-submit');
+      function warn(text) {
+        msg.textContent = text;
+        msg.className = 'sm:col-span-2 text-sm text-amber-600';
+      }
+      msg.textContent = '';
+      msg.className = 'sm:col-span-2 text-sm hidden';
+      if (!name) { warn('Please add your name so we know who to reply to.'); document.getElementById('lf-name').focus(); return; }
+      if (!phone && !email) { warn('Add a phone number or email so we can send your result.'); document.getElementById('lf-phone').focus(); return; }
+      if (btn.disabled) return;
+
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      var notes = 'Revenue Leak Scorecard — score ' + lastResult.pct + '/100 (' + lastResult.band + ')' +
+        ', indicative leak ~' + lastResult.leakPct + '%. Top leaks: ' + lastResult.top.join(', ') +
+        '. Answers [' + lastResult.answers.join(',') + '].';
+
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          prospectName: name,
+          businessName: biz,
+          phone: phone,
+          email: email,
+          source: 'revenue-leak-scorecard',
+          leadSource: 'revenue-leak-scorecard',
+          outreachCategory: 'Revenue Leak Scorecard',
+          offerType: 'Revenue Leak Scorecard',
+          notes: notes
+        })
+      }).then(function () {
+        msg.textContent = 'Sent. We will reach out within one business day — or message us now on WhatsApp.';
+        msg.className = 'sm:col-span-2 text-sm text-primary';
+        btn.textContent = 'Sent';
+      }).catch(function () {
+        warn('Could not send automatically — tap WhatsApp below and we will pick it up from there.');
+        btn.disabled = false;
+        btn.textContent = 'Try again';
+      });
     });
 
     document.getElementById('res-retake').addEventListener('click', function () {
       form.reset();
       label.textContent = '0 / 16';
       bar.style.width = '0%';
+      lastResult = null;
+      document.getElementById('lead-form').reset();
+      var lb = document.getElementById('lf-submit');
+      lb.disabled = false;
+      lb.textContent = 'Send my result';
+      var lm = document.getElementById('lf-msg');
+      lm.textContent = '';
+      lm.className = 'sm:col-span-2 text-sm hidden';
       document.getElementById('result').classList.add('hidden');
       document.querySelectorAll('.qcard').forEach(function (c) { c.classList.remove('unanswered'); });
       document.getElementById('scorecard').scrollIntoView({ behavior: 'smooth', block: 'start' });
