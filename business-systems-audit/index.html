@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Revenue Leak Scorecard — Free Business Systems Diagnostic | Gabochie Marketing</title>
+  <meta name="description" content="Take the free 3-minute Revenue Leak Scorecard. Score your business across the 8 systems that decide whether inquiries become paying customers — and see where the money leaks." />
+  <meta property="og:title" content="Revenue Leak Scorecard — Find Where Your Business Leaks Money" />
+  <meta property="og:description" content="A free 3-minute diagnostic across 8 business systems. Get your score, your top 3 leaks, and a next-step plan." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://mkt.gabochie.com/assets/images/og-image.jpg" />
+  <meta property="og:url" content="https://mkt.gabochie.com/business-systems-audit/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Revenue Leak Scorecard — Free Business Systems Diagnostic" />
+  <meta name="twitter:description" content="Score your business across 8 systems in 3 minutes. See your top 3 revenue leaks." />
+  <meta name="twitter:image" content="https://mkt.gabochie.com/assets/images/og-image.jpg" />
+  <link rel="canonical" href="https://mkt.gabochie.com/business-systems-audit/" />
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon-pin.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#1A7B3A" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Gabochie" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is the Revenue Leak Scorecard really free?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. The scorecard, your score and your top leak areas are free and yours to keep. You only pay if you want the deep audit or implementation." }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need to prepare anything?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. Answer from memory; it takes about 3 minutes. The free debrief call is where we refine the numbers with your real volumes." }
+      }
+    ]
+  }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1A7B3A',
+            accent: '#7ED354',
+            'accent-light': '#a8e07a',
+            'dark-green': '#0F5C28',
+            'body-text': '#2D2D2D',
+            'urgency': '#E53935',
+            'gold': '#FFC107',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    html { scroll-behavior: smooth; }
+    .opt { display: block; cursor: pointer; }
+    .opt input { position: absolute; opacity: 0; pointer-events: none; }
+    .opt span.pill {
+      display: block; border: 1.5px solid #e5e7eb; border-radius: 0.75rem;
+      padding: 0.65rem 0.9rem; font-size: 0.9rem; color: #374151;
+      transition: border-color .15s, background .15s, box-shadow .15s;
+    }
+    .opt:hover span.pill { border-color: #a8e07a; }
+    .opt input:checked + span.pill {
+      border-color: #1A7B3A; background: #f0f9f3; box-shadow: 0 0 0 2px rgba(26,123,58,.12);
+      color: #0F5C28; font-weight: 600;
+    }
+    .opt input:focus-visible + span.pill { outline: 2px solid #1A7B3A; outline-offset: 2px; }
+    .qcard.unanswered { border-color: #E53935; }
+    details > summary { list-style: none; cursor: pointer; }
+    details > summary::-webkit-details-marker { display: none; }
+    .band-critical { background: #fef2f2; color: #b91c1c; }
+    .band-leaking  { background: #fff7ed; color: #c2410c; }
+    .band-developing { background: #fefce8; color: #a16207; }
+    .band-solid    { background: #f0fdf4; color: #15803d; }
+  </style>
+</head>
+<body class="bg-white text-body-text antialiased font-sans">
+
+  <!-- NAVBAR -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 lg:h-20">
+        <a href="/" class="flex items-center gap-2">
+          <svg class="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+          </svg>
+          <span class="text-xl font-bold text-primary">Gabochie Marketing</span>
+        </a>
+        <div class="hidden md:flex items-center gap-8">
+          <a href="/#system" class="text-sm font-medium text-gray-600 hover:text-primary transition">How It Works</a>
+          <a href="/#proof" class="text-sm font-medium text-gray-600 hover:text-primary transition">Results</a>
+          <a href="/business-systems-audit/" class="text-sm font-semibold text-primary transition" aria-current="page">Systems Audit</a>
+          <a href="/#blog" class="text-sm font-medium text-gray-600 hover:text-primary transition">Blog</a>
+          <a href="/#pricing" class="text-sm font-medium text-gray-600 hover:text-primary transition">Pricing</a>
+          <a href="/free-audit.html" class="bg-primary text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-dark-green transition">Get Free Audit</a>
+        </div>
+        <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="md:hidden p-2 text-gray-600" aria-label="Open menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-3">
+      <a href="/#system" class="block text-sm font-medium text-gray-600 py-2">How It Works</a>
+      <a href="/#proof" class="block text-sm font-medium text-gray-600 py-2">Results</a>
+      <a href="/business-systems-audit/" class="block text-sm font-semibold text-primary py-2">Systems Audit</a>
+      <a href="/#blog" class="block text-sm font-medium text-gray-600 py-2">Blog</a>
+      <a href="/#pricing" class="block text-sm font-medium text-gray-600 py-2">Pricing</a>
+      <a href="/free-audit.html" class="block text-sm font-semibold text-primary py-2">Get Free Audit</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="pt-28 pb-16 lg:pt-36 lg:pb-20 bg-gradient-to-b from-[#f0f9f3] to-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="inline-flex items-center gap-2 bg-primary/10 text-dark-green text-xs font-bold uppercase tracking-wide px-4 py-1.5 rounded-full mb-6">
+        Free diagnostic · 3 minutes
+      </span>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-[#111827] mb-5">
+        Where is your business <span class="text-primary">leaking money?</span>
+      </h1>
+      <p class="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto mb-8 leading-relaxed">
+        Take the free Revenue Leak Scorecard. Get a score across the 8 systems that decide whether inquiries
+        become paying customers — and the GHS value of your biggest leaks.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="#scorecard" class="w-full sm:w-auto bg-primary text-white px-8 py-4 rounded-full font-bold text-base hover:bg-dark-green transition shadow-lg shadow-primary/25">
+          Take the free scorecard
+        </a>
+        <a href="https://wa.me/233506384917?text=Hi%2C%20I%27d%20like%20to%20know%20more%20about%20the%20Revenue%20Leak%20Scorecard" target="_blank" rel="noopener" class="w-full sm:w-auto border-2 border-primary text-primary px-8 py-4 rounded-full font-bold text-base hover:bg-primary hover:text-white transition">
+          Ask a question
+        </a>
+      </div>
+      <p class="text-sm text-gray-500 mt-6">No jargon. No obligation. Built from the audit method we use with established Ghanaian firms.</p>
+    </div>
+  </header>
+
+  <!-- PROBLEM -->
+  <section class="py-16 lg:py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-black text-[#111827] mb-4">You're not losing to competitors.<br class="hidden sm:block" /> You're losing to <span class="text-primary">gaps</span>.</h2>
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto">It's rarely the product. It's what happens — or doesn't — between the first inquiry and the money in the bank.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="border border-gray-100 rounded-2xl p-6 bg-gray-50/60">
+          <h3 class="font-bold text-[#111827] mb-2">Slow first response</h3>
+          <p class="text-sm text-gray-600">Leads wait hours — or never get a reply — while the buyer calls the next business.</p>
+        </div>
+        <div class="border border-gray-100 rounded-2xl p-6 bg-gray-50/60">
+          <h3 class="font-bold text-[#111827] mb-2">No follow-up</h3>
+          <p class="text-sm text-gray-600">A "not now" becomes a never, because nothing reminds you to follow up.</p>
+        </div>
+        <div class="border border-gray-100 rounded-2xl p-6 bg-gray-50/60">
+          <h3 class="font-bold text-[#111827] mb-2">Bookings in chats</h3>
+          <p class="text-sm text-gray-600">Appointments live in WhatsApp threads; no-shows and double-bookings eat the week.</p>
+        </div>
+        <div class="border border-gray-100 rounded-2xl p-6 bg-gray-50/60">
+          <h3 class="font-bold text-[#111827] mb-2">Invoices in a notebook</h3>
+          <p class="text-sm text-gray-600">What's owed is tracked in memory; late payments quietly pile up.</p>
+        </div>
+        <div class="border border-gray-100 rounded-2xl p-6 bg-gray-50/60">
+          <h3 class="font-bold text-[#111827] mb-2">No reviews engine</h3>
+          <p class="text-sm text-gray-600">Happy customers are never asked — so the next buyer sees silence.</p>
+        </div>
+        <div class="border border-gray-100 rounded-2xl p-6 bg-gray-50/60">
+          <h3 class="font-bold text-[#111827] mb-2">No numbers</h3>
+          <p class="text-sm text-gray-600">Inquiries, conversion and average sale value are guesses, not facts.</p>
+        </div>
+      </div>
+      <p class="text-center text-gray-600 mt-10 max-w-2xl mx-auto">
+        In the agentic era, the businesses that win are the ones a system — and an assistant — can actually run. That starts with knowing where the gaps are.
+      </p>
+    </div>
+  </section>
+
+  <!-- WHAT YOU GET -->
+  <section class="py-16 lg:py-20 bg-[#0F5C28] text-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-black mb-4">What you get — free</h2>
+          <p class="text-white/80 text-lg mb-8">An honest snapshot in 3 minutes. No sales call required to see your score.</p>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <svg class="w-6 h-6 text-accent shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m5 13 4 4L19 7"/></svg>
+              <span>A 0–100 systems score across 8 domains</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-6 h-6 text-accent shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m5 13 4 4L19 7"/></svg>
+              <span>Your 3 biggest leak areas, ranked</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-6 h-6 text-accent shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m5 13 4 4L19 7"/></svg>
+              <span>An indicative share of monthly revenue typically lost at your stage</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-6 h-6 text-accent shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m5 13 4 4L19 7"/></svg>
+              <span>A one-page next-step plan for your top leak</span>
+            </li>
+          </ul>
+        </div>
+        <div class="bg-white/10 border border-white/15 rounded-3xl p-8 backdrop-blur-sm">
+          <p class="text-sm uppercase tracking-widest text-accent font-bold mb-4">The 8 systems</p>
+          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>Lead capture & speed</li>
+            <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>Follow-up & pipeline</li>
+            <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>Booking & scheduling</li>
+            <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>Payments & invoicing</li>
+            <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>Reviews & reputation</li>
+            <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>WhatsApp & comms</li>
+            <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>Data & reporting</li>
+            <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>AI readiness</li>
+          </ul>
+          <div class="mt-6 pt-6 border-t border-white/15">
+            <p class="text-xs text-white/60">Scorecard takes ~3 minutes. Your answers stay on your device until you choose to send them.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCORECARD -->
+  <section id="scorecard" class="py-16 lg:py-20 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl sm:text-4xl font-black text-[#111827] mb-3">Revenue Leak Scorecard</h2>
+        <p class="text-gray-600">Answer 16 questions. Pick the honest option — not the optimistic one.</p>
+      </div>
+
+      <div class="mb-8">
+        <div class="flex items-center justify-between text-sm font-semibold text-gray-600 mb-2">
+          <span>Progress</span>
+          <span id="progress-label">0 / 16</span>
+        </div>
+        <div class="h-2.5 bg-gray-200 rounded-full overflow-hidden">
+          <div id="progress-bar" class="h-full bg-primary rounded-full transition-all duration-300" style="width:0%"></div>
+        </div>
+      </div>
+
+      <form id="scorecard-form" novalidate>
+        <div id="questions" class="space-y-5"></div>
+
+        <div class="mt-8 text-center">
+          <button type="submit" class="w-full sm:w-auto bg-primary text-white px-10 py-4 rounded-full font-bold text-base hover:bg-dark-green transition shadow-lg shadow-primary/25">
+            Get my score
+          </button>
+          <p class="text-xs text-gray-500 mt-3">All 16 answers required. Nothing is sent until you choose to.</p>
+        </div>
+      </form>
+
+      <!-- RESULT -->
+      <div id="result" class="hidden mt-10 bg-white border border-gray-100 rounded-3xl p-6 sm:p-10 shadow-xl shadow-gray-200/60">
+        <div class="text-center">
+          <p class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-2">Your systems score</p>
+          <div class="flex items-end justify-center gap-1 mb-2">
+            <span id="res-score" class="text-6xl sm:text-7xl font-black text-[#111827] leading-none">0</span>
+            <span class="text-2xl font-bold text-gray-400 mb-1">/100</span>
+          </div>
+          <span id="res-band" class="inline-block px-4 py-1.5 rounded-full text-sm font-bold mb-6">—</span>
+          <p id="res-leak" class="text-lg text-gray-700 max-w-xl mx-auto mb-2"></p>
+          <p class="text-xs text-gray-500 max-w-xl mx-auto">Indicative range only. We refine the GHS figure with your real inquiry volume, close rate and average sale value on the free debrief call.</p>
+        </div>
+
+        <div class="mt-8">
+          <h3 class="font-bold text-[#111827] mb-4">Your top 3 leak areas</h3>
+          <div id="res-leaks" class="space-y-3"></div>
+        </div>
+
+        <div class="mt-8 grid sm:grid-cols-2 gap-3">
+          <a id="res-wa" href="#" target="_blank" rel="noopener" class="text-center bg-primary text-white px-6 py-3.5 rounded-full font-bold hover:bg-dark-green transition">
+            Book my free debrief
+          </a>
+          <a id="res-mail" href="#" class="text-center border-2 border-primary text-primary px-6 py-3.5 rounded-full font-bold hover:bg-primary hover:text-white transition">
+            Email me this score
+          </a>
+        </div>
+        <button type="button" id="res-retake" class="mt-4 w-full text-sm font-semibold text-gray-500 hover:text-primary transition">Retake the scorecard</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="py-16 lg:py-20 bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl sm:text-4xl font-black text-[#111827] text-center mb-12">How it works</h2>
+      <div class="grid sm:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary font-black text-xl flex items-center justify-center mx-auto mb-4">1</div>
+          <h3 class="font-bold text-[#111827] mb-2">Answer 16 questions</h3>
+          <p class="text-sm text-gray-600">Three minutes, from memory. No documents needed.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary font-black text-xl flex items-center justify-center mx-auto mb-4">2</div>
+          <h3 class="font-bold text-[#111827] mb-2">Get your score instantly</h3>
+          <p class="text-sm text-gray-600">See your band, your leak share, and your top 3 problem systems.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary font-black text-xl flex items-center justify-center mx-auto mb-4">3</div>
+          <h3 class="font-bold text-[#111827] mb-2">Book a free debrief</h3>
+          <p class="text-sm text-gray-600">We turn your score into a GHS leak model and a 90-day fix plan.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO IT'S FOR -->
+  <section class="py-16 lg:py-20 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white border border-gray-100 rounded-3xl p-8 sm:p-12">
+        <h2 class="text-2xl sm:text-3xl font-black text-[#111827] mb-6">Who it's for</h2>
+        <div class="grid sm:grid-cols-2 gap-8">
+          <div>
+            <p class="text-sm font-bold text-primary uppercase tracking-wide mb-3">A good fit</p>
+            <ul class="space-y-2.5 text-sm text-gray-600">
+              <li>Owner-run businesses with steady inquiries</li>
+              <li>5–50 staff, GHS 50k–500k monthly revenue</li>
+              <li>20+ inbound inquiries a month (calls, WhatsApp, DMs, walk-ins)</li>
+              <li>"We should be converting better" but nobody knows exactly why</li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-gray-400 uppercase tracking-wide mb-3">Not the right fit</p>
+            <ul class="space-y-2.5 text-sm text-gray-500">
+              <li>Pre-revenue or no consistent inquiries — start with visibility instead</li>
+              <li>Enterprise with an in-house ops team (long procurement cycles)</li>
+              <li>You only want a website — that's a different service</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="py-16 lg:py-20 bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl sm:text-4xl font-black text-[#111827] text-center mb-3">From free to fixed</h2>
+      <p class="text-gray-600 text-center mb-12 max-w-2xl mx-auto">Start free. If it's useful, the paid audit is credited 100% toward implementation.</p>
+      <div class="grid sm:grid-cols-3 gap-6">
+        <div class="border border-gray-100 rounded-2xl p-6">
+          <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Step 1</p>
+          <h3 class="font-black text-xl text-[#111827] mb-1">Scorecard</h3>
+          <p class="text-2xl font-black text-primary mb-4">Free</p>
+          <p class="text-sm text-gray-600">16 questions, instant score, top 3 leaks, next-step plan.</p>
+        </div>
+        <div class="border-2 border-primary rounded-2xl p-6 relative">
+          <span class="absolute -top-3 left-6 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">Recommended</span>
+          <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Step 2</p>
+          <h3 class="font-black text-xl text-[#111827] mb-1">Deep Systems Audit</h3>
+          <p class="text-2xl font-black text-primary mb-4">GHS 1,500–3,000</p>
+          <p class="text-sm text-gray-600">2 weeks. Full leak model in GHS, evidence, 90-day roadmap. Credited toward implementation.</p>
+        </div>
+        <div class="border border-gray-100 rounded-2xl p-6">
+          <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Step 3</p>
+          <h3 class="font-black text-xl text-[#111827] mb-1">90-Day Fix Sprint</h3>
+          <p class="text-2xl font-black text-primary mb-4">Quoted</p>
+          <p class="text-sm text-gray-600">We implement the systems — capture, follow-up, booking, invoicing, reviews, reporting.</p>
+        </div>
+      </div>
+      <p class="text-xs text-gray-400 text-center mt-6">Audit pricing shown is indicative during the pilot and may change. Implementation is quoted after the audit.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-16 lg:py-20 bg-gray-50">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl sm:text-4xl font-black text-[#111827] text-center mb-10">Questions</h2>
+      <div class="space-y-3">
+        <details class="bg-white border border-gray-100 rounded-2xl p-5">
+          <summary class="flex items-center justify-between font-bold text-[#111827]">Is this just a sales pitch?
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="text-sm text-gray-600 mt-3">The scorecard, your score and your top leak areas are free and yours to keep. You only pay if you want the deep audit or implementation.</p>
+        </details>
+        <details class="bg-white border border-gray-100 rounded-2xl p-5">
+          <summary class="flex items-center justify-between font-bold text-[#111827]">Do I need to prepare anything?
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="text-sm text-gray-600 mt-3">No. Answer from memory — it takes about 3 minutes. The debrief call is where we refine the numbers with your real volumes.</p>
+        </details>
+        <details class="bg-white border border-gray-100 rounded-2xl p-5">
+          <summary class="flex items-center justify-between font-bold text-[#111827]">What happens after the scorecard?
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="text-sm text-gray-600 mt-3">You can book a free 20-minute debrief. If the full picture is useful, the paid audit gives you the GHS leak model, evidence and a 90-day roadmap.</p>
+        </details>
+        <details class="bg-white border border-gray-100 rounded-2xl p-5">
+          <summary class="flex items-center justify-between font-bold text-[#111827]">Is my data safe?
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="text-sm text-gray-600 mt-3">Your answers stay in your browser until you choose to send them. Contact details are used only to send your result and arrange the debrief.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="py-16 lg:py-20 bg-[#0F5C28] text-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl sm:text-4xl font-black mb-4">Find your leaks in 3 minutes</h2>
+      <p class="text-white/80 text-lg mb-8">Every month you wait is another month of revenue quietly walking out the door.</p>
+      <a href="#scorecard" class="inline-block bg-white text-[#0F5C28] px-10 py-4 rounded-full font-black text-base hover:bg-accent transition shadow-lg">
+        Take the free scorecard
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#2D2D2D] text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="grid lg:grid-cols-12 gap-12">
+        <div class="lg:col-span-5">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center">
+              <svg class="w-7 h-7 text-accent" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+            </div>
+            <div>
+              <span class="text-xl font-bold text-white">Gabochie Marketing</span>
+              <p class="text-xs text-accent">Ghana's #1 Local Visibility Agency</p>
+            </div>
+          </div>
+          <p class="text-gray-400 text-sm leading-relaxed mb-6 max-w-sm">We transform Google Maps into a predictable customer acquisition channel for serious Ghanaian businesses.</p>
+          <div class="space-y-3">
+            <a href="tel:+233506384917" class="flex items-center gap-3 text-gray-400 hover:text-accent transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+              <span class="text-sm">+233 50 638 4917</span>
+            </a>
+            <a href="mailto:gabochiemarketing@gmail.com" class="flex items-center gap-3 text-gray-400 hover:text-accent transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              <span class="text-sm">gabochiemarketing@gmail.com</span>
+            </a>
+          </div>
+        </div>
+        <div class="lg:col-span-7">
+          <div class="grid sm:grid-cols-3 gap-8">
+            <div>
+              <h4 class="text-white font-semibold mb-5 text-sm uppercase tracking-wide">Services</h4>
+              <ul class="space-y-3">
+                <li><a href="/#pricing" class="text-gray-400 text-sm hover:text-accent transition">Google Maps Optimization</a></li>
+                <li><a href="/services/review-management.html" class="text-gray-400 text-sm hover:text-accent transition">Review Management</a></li>
+                <li><a href="/services/wordpress-support.html" class="text-gray-400 text-sm hover:text-accent transition">WordPress Support</a></li>
+                <li><a href="/services/wordpress-website-building.html" class="text-gray-400 text-sm hover:text-accent transition">Website Building</a></li>
+                <li><a href="/business-systems-audit/" class="text-gray-400 text-sm hover:text-accent transition">Business Systems Audit</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="text-white font-semibold mb-5 text-sm uppercase tracking-wide">Company</h4>
+              <ul class="space-y-3">
+                <li><a href="/#system" class="text-gray-400 text-sm hover:text-accent transition">How It Works</a></li>
+                <li><a href="/#proof" class="text-gray-400 text-sm hover:text-accent transition">Results</a></li>
+                <li><a href="/#pricing" class="text-gray-400 text-sm hover:text-accent transition">Pricing</a></li>
+                <li><a href="/referral.html" class="text-gray-400 text-sm hover:text-accent transition">Refer &amp; Earn</a></li>
+                <li><a href="/saas-vote.html" class="text-gray-400 text-sm hover:text-accent transition">SaaS Survey</a></li>
+                <li><a href="/client/login.html" class="text-gray-400 text-sm hover:text-accent transition">Client Portal</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="text-white font-semibold mb-5 text-sm uppercase tracking-wide">Legal</h4>
+              <ul class="space-y-3">
+                <li><a href="/privacy.html" class="text-gray-400 text-sm hover:text-accent transition">Privacy Policy</a></li>
+                <li><a href="/terms.html" class="text-gray-400 text-sm hover:text-accent transition">Terms of Service</a></li>
+                <li><a href="/disclaimer.html" class="text-gray-400 text-sm hover:text-accent transition">Disclaimer</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <p class="text-gray-500 text-sm">&copy; 2026 Gabochie Marketing. All rights reserved.</p>
+          <div class="flex items-center gap-4">
+            <a href="https://www.facebook.com/profile.php?id=61573906026304" target="_blank" rel="noopener" class="text-gray-400 hover:text-white transition" aria-label="Facebook">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/in/gideonabochie" target="_blank" rel="noopener" class="text-gray-400 hover:text-white transition" aria-label="LinkedIn">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0-.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.3 8.65 21 11 21 14.1V21h-4v-6.1c0-1.46-.03-3.34-2.04-3.34-2.04 0-2.35 1.59-2.35 3.24V21H9z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script defer src="/assets/js/pwa.js"></script>
+  <script defer src="/assets/js/bottom-nav.js"></script>
+
+  <script>
+  (function () {
+    'use strict';
+    var DOMAINS = [
+      { key: 'capture',  name: 'Lead capture & response speed', weight: 0.20,
+        fix: 'Answer every new lead within 15 minutes and log it in one place.' },
+      { key: 'followup', name: 'Follow-up & pipeline', weight: 0.20,
+        fix: 'Run a simple 3-touch follow-up on every lead that does not buy today.' },
+      { key: 'booking',  name: 'Booking & scheduling', weight: 0.12,
+        fix: 'Use a self-booking link with automatic reminders to cut no-shows.' },
+      { key: 'payments', name: 'Payments & invoicing', weight: 0.12,
+        fix: 'Invoice from a tool with automatic payment reminders.' },
+      { key: 'reviews',  name: 'Reviews & reputation', weight: 0.10,
+        fix: 'Ask every happy customer for a Google review at a fixed moment.' },
+      { key: 'comms',    name: 'WhatsApp & comms automation', weight: 0.10,
+        fix: 'Write the 10 common answers and use templates and auto-replies.' },
+      { key: 'data',     name: 'Data & reporting', weight: 0.10,
+        fix: 'Track inquiries, conversion rate and average sale value monthly.' },
+      { key: 'ai',       name: 'AI readiness', weight: 0.06,
+        fix: 'Write your services, prices, availability and FAQs down in one place.' }
+    ];
+    var QUESTIONS = [
+      { d: 'capture', q: 'When a lead comes in (call, WhatsApp, form, walk-in), where does it land?',
+        o: ['Nothing formal — it lives on my phone or in my head', 'One shared inbox or sheet, updated inconsistently', 'A shared sheet/inbox, usually updated', 'A tracked system with an owner assigned for each lead'] },
+      { d: 'capture', q: 'How fast does a new lead get a first human response on a working day?',
+        o: ['Over 24 hours, or sometimes never', 'Same day, a few hours later', 'Within an hour', 'Within 15 minutes, every time'] },
+      { d: 'followup', q: 'What happens to a lead that does not buy today?',
+        o: ['Nothing — it gets dropped', 'I try to remember to check back', 'Informal list or chat reminder', 'Scheduled 3+ touch follow-up'] },
+      { d: 'followup', q: 'Can you name your current pipeline right now (who, stage, next action, value)?',
+        o: ['No idea', 'Roughly, in my head', 'A sheet or notebook', 'A live pipeline with stages and next actions'] },
+      { d: 'booking', q: 'How are appointments, quotes and site visits booked?',
+        o: ['Ad-hoc over chats', 'I enter them manually in my calendar', 'Shared calendar, manual entry', 'Self-booking link or automated scheduling'] },
+      { d: 'booking', q: 'How many booked appointments no-show or get rescheduled each month?',
+        o: ['We do not track it', 'Most of them', 'A few', 'Under 10%, with reminders'] },
+      { d: 'payments', q: 'How do you invoice and track what is owed?',
+        o: ['No records', 'Notebook or chat memory', 'Spreadsheet with manual follow-up', 'Invoicing tool with automatic reminders'] },
+      { d: 'payments', q: 'What share of invoices is paid late?',
+        o: ['I do not know', 'More than half', '20–50%', 'Under 10%, or prepaid'] },
+      { d: 'reviews', q: 'How are happy customers asked for a Google review?',
+        o: ['Never', 'Occasionally, ad-hoc', 'An informal script', 'Systematically, at a set moment'] },
+      { d: 'reviews', q: 'Do you respond to every review and track rating trends?',
+        o: ['No', 'Sometimes', 'Most reviews', 'Every review, tracked monthly'] },
+      { d: 'comms', q: 'Is there a written set of answers for the 10 most common inquiries?',
+        o: ['No', 'It is in my head', 'A document nobody really uses', 'A shared, used, up-to-date doc'] },
+      { d: 'comms', q: 'Are any responses or confirmations automated (auto-replies, templates, reminders)?',
+        o: ['None', 'A basic away message', 'Templates used manually', 'Automated flows'] },
+      { d: 'data', q: 'Do you know your inquiries, conversion rate and average sale value for last month?',
+        o: ['None of them', 'One of them, roughly', 'Two of them, roughly', 'All three, accurately'] },
+      { d: 'data', q: 'How often do you review business numbers in a structured way?',
+        o: ['Never', 'When something feels wrong', 'Monthly, informally', 'Monthly, with decisions logged'] },
+      { d: 'ai', q: 'Is your business information (services, prices, availability, FAQs) written down where a tool could read it?',
+        o: ['No', 'Scattered across chats', 'Some documents', 'Structured, central and current'] },
+      { d: 'ai', q: 'Are you using any automation or AI in the sales or service workflow today?',
+        o: ['None', 'Just experimenting', 'One tool in daily use', 'Multiple tools with measured time saved'] }
+    ];
+
+    var form = document.getElementById('scorecard-form');
+    var wrap = document.getElementById('questions');
+    var bar = document.getElementById('progress-bar');
+    var label = document.getElementById('progress-label');
+
+    DOMAINS.forEach(function (dom) {
+      var card = document.createElement('div');
+      card.className = 'qcard bg-white border border-gray-100 rounded-2xl p-6';
+      var idxs = [];
+      QUESTIONS.forEach(function (q, i) { if (q.d === dom.key) idxs.push(i); });
+      var html = '<h3 class="font-bold text-[#111827] mb-4 flex items-center gap-2">' +
+        '<span class="w-2 h-2 rounded-full bg-primary"></span>' + dom.name + '</h3>';
+      idxs.forEach(function (qi) {
+        var q = QUESTIONS[qi];
+        html += '<fieldset class="mb-5 last:mb-0" data-q="' + qi + '"><legend class="text-sm font-semibold text-[#111827] mb-3">' + (qi + 1) + '. ' + q.q + '</legend>';
+        q.o.forEach(function (text, vi) {
+          html += '<label class="opt mb-2"><input type="radio" name="q' + qi + '" value="' + vi + '" /><span class="pill">' + text + '</span></label>';
+        });
+        html += '</fieldset>';
+      });
+      card.innerHTML = html;
+      wrap.appendChild(card);
+    });
+
+    function answeredCount() {
+      var n = 0;
+      for (var i = 0; i < 16; i++) {
+        if (document.querySelector('input[name="q' + i + '"]:checked')) n++;
+      }
+      return n;
+    }
+    form.addEventListener('change', function () {
+      var n = answeredCount();
+      label.textContent = n + ' / 16';
+      bar.style.width = Math.round((n / 16) * 100) + '%';
+      document.querySelectorAll('.qcard').forEach(function (c) {
+        if (c.querySelector('input:checked')) c.classList.remove('unanswered');
+      });
+    });
+
+    function bandFor(pct) {
+      if (pct <= 25) return { name: 'Critical', cls: 'band-critical', range: '30–45%', note: 'Your systems are the growth ceiling right now.' };
+      if (pct <= 50) return { name: 'Leaking', cls: 'band-leaking', range: '18–30%', note: 'Real money is being lost every week.' };
+      if (pct <= 75) return { name: 'Developing', cls: 'band-developing', range: '8–18%', note: 'It works, but it is fragile and not scalable.' };
+      return { name: 'Solid', cls: 'band-solid', range: '3–8%', note: 'Strong base. Time to optimise and add automation.' };
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var missing = [];
+      for (var i = 0; i < 16; i++) {
+        if (!document.querySelector('input[name="q' + i + '"]:checked')) missing.push(i);
+      }
+      if (missing.length) {
+        document.querySelectorAll('.qcard').forEach(function (c) { c.classList.remove('unanswered'); });
+        var first = null;
+        missing.forEach(function (qi) {
+          var fs = document.querySelector('fieldset[data-q="' + qi + '"]');
+          if (fs) {
+            var card = fs.closest('.qcard');
+            if (card) card.classList.add('unanswered');
+            if (!first) first = fs;
+          }
+        });
+        if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      var domainScores = {};
+      DOMAINS.forEach(function (d) { domainScores[d.key] = 0; });
+      for (var i2 = 0; i2 < 16; i2++) {
+        var sel = document.querySelector('input[name="q' + i2 + '"]:checked');
+        var v = parseInt(sel.value, 10);
+        domainScores[QUESTIONS[i2].d] += v;
+      }
+
+      var total = 0, leakWeighted = 0;
+      var gaps = [];
+      DOMAINS.forEach(function (d) {
+        var score = domainScores[d.key];
+        total += score;
+        var gap = 1 - (score / 6);
+        leakWeighted += d.weight * gap;
+        gaps.push({ name: d.name, gap: gap, fix: d.fix, score: score });
+      });
+      var pct = Math.round((total / 48) * 100);
+      var leakPct = Math.max(3, Math.min(45, Math.round(leakWeighted * 45)));
+      var band = bandFor(pct);
+
+      document.getElementById('res-score').textContent = pct;
+      var badge = document.getElementById('res-band');
+      badge.textContent = band.name;
+      badge.className = 'inline-block px-4 py-1.5 rounded-full text-sm font-bold mb-6 ' + band.cls;
+      document.getElementById('res-leak').textContent = band.note + ' Businesses at this stage typically leak ' +
+        band.range + ' of monthly revenue through system gaps — roughly ' + leakPct + '% on your answers.';
+
+      gaps.sort(function (a, b) { return b.gap - a.gap; });
+      var top = gaps.slice(0, 3);
+      var leakHtml = '';
+      top.forEach(function (g, i) {
+        leakHtml += '<div class="flex items-start gap-4 border border-gray-100 rounded-xl p-4">' +
+          '<span class="w-8 h-8 shrink-0 rounded-full bg-primary/10 text-primary font-black flex items-center justify-center">' + (i + 1) + '</span>' +
+          '<div><p class="font-bold text-[#111827]">' + g.name + '</p>' +
+          '<p class="text-sm text-gray-600">Quick fix: ' + g.fix + '</p></div></div>';
+      });
+      document.getElementById('res-leaks').innerHTML = leakHtml;
+
+      var summary = 'Revenue Leak Scorecard result: ' + pct + '/100 (' + band.name + '). Top leaks: ' +
+        top.map(function (g) { return g.name; }).join(', ') + '.';
+      var waText = 'Hi, I took the Revenue Leak Scorecard. ' + summary + ' I would like to book the free debrief.';
+      document.getElementById('res-wa').href = 'https://wa.me/233506384917?text=' + encodeURIComponent(waText);
+      document.getElementById('res-mail').href = 'mailto:gabochiemarketing@gmail.com?subject=' +
+        encodeURIComponent('My Revenue Leak Scorecard result') + '&body=' + encodeURIComponent(summary);
+
+      var result = document.getElementById('result');
+      result.classList.remove('hidden');
+      result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    document.getElementById('res-retake').addEventListener('click', function () {
+      form.reset();
+      label.textContent = '0 / 16';
+      bar.style.width = '0%';
+      document.getElementById('result').classList.add('hidden');
+      document.querySelectorAll('.qcard').forEach(function (c) { c.classList.remove('unanswered'); });
+      document.getElementById('scorecard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  })();
+  </script>
+</body>
+</html>
