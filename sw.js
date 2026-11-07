@@ -1,4 +1,4 @@
-const CACHE = 'gabochie-mkt-v1';
+const CACHE = 'gabochie-mkt-v2';
 const CORE = ['/', '/index.html', '/offline.html', '/manifest.json',
   '/assets/images/icon-192.png', '/assets/images/icon-512.png',
   '/assets/images/favicon-pin.svg', '/assets/js/pwa.js'];
