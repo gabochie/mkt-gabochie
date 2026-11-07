@@ -285,10 +285,10 @@
           <h3 class="font-bold text-[#111827] mb-1">Send me the full picture</h3>
           <p class="text-sm text-gray-600 mb-4">We'll confirm your score, walk you through the GHS leak model on a free 20-minute debrief, and send your next-step plan. No spam.</p>
           <form id="lead-form" class="grid sm:grid-cols-2 gap-3" novalidate>
-            <input id="lf-name" type="text" placeholder="Your name *" autocomplete="name" class="border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
-            <input id="lf-biz" type="text" placeholder="Business name" autocomplete="organization" class="border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
-            <input id="lf-phone" type="tel" placeholder="Phone / WhatsApp" autocomplete="tel" class="border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
-            <input id="lf-email" type="email" placeholder="Email (optional)" autocomplete="email" class="border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <input id="lf-name" type="text" placeholder="Your name *" aria-label="Your name" autocomplete="name" class="border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <input id="lf-biz" type="text" placeholder="Business name" aria-label="Business name" autocomplete="organization" class="border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <input id="lf-phone" type="tel" placeholder="Phone / WhatsApp" aria-label="Phone or WhatsApp number" inputmode="tel" autocomplete="tel" class="border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <input id="lf-email" type="email" placeholder="Email (optional)" aria-label="Email (optional)" autocomplete="email" class="border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
             <button type="submit" id="lf-submit" class="sm:col-span-2 bg-primary text-white px-6 py-3.5 rounded-full font-bold hover:bg-dark-green transition disabled:opacity-60">Send my result</button>
             <p id="lf-msg" class="sm:col-span-2 text-sm hidden" role="status"></p>
           </form>
