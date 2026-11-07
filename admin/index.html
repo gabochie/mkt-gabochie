@@ -917,6 +917,7 @@
 <script>
   // ═══ CONFIG ═══
   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby43AfuiiL77YSn6VyJ2xlNPRDFKV9qiduq-XCg8RyLYuE3TnvMWtp22c-UOKEkSvw-/exec';
+  const PORTAL_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzv60aDninIoZRPZtq6yNkMlNq2I3aWrPJT5uMqFNgxgDwdUpRe7kCDoNtcfRvgrVLD/exec';
   const SUPABASE_URL = 'https://gcbsffvryqguesofgvjh.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_aZzUKB8qmxbjcxlEB3F0NQ_sBA_itWW';
 
@@ -1830,8 +1831,38 @@
     };
     if (!data.name || !data.email) { showToast('Name and email are required', 'error'); return; }
     const success = await sbInsert('clients', [data]);
-    if (success) { showToast('Client created', 'success'); closeClientModal(); await loadClients(); }
-    else showToast('Failed to create client', 'error');
+    if (!success) { showToast('Failed to create client', 'error'); return; }
+
+    closeClientModal();
+    await loadClients();
+
+    // Create matching portal login (Google Clients sheet) so the client can actually sign in
+    const pkgLabel = {
+      starter_visibility: 'Starter Visibility',
+      growth_system: 'Growth System',
+      market_authority: 'Market Authority'
+    }[data.package] || data.package;
+    let portal = null;
+    try {
+      const res = await fetch(PORTAL_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'registerClient',
+          email: data.email,
+          name: data.name,
+          businessName: data.business_name,
+          package: pkgLabel
+        })
+      });
+      portal = await res.json();
+    } catch (_) {}
+
+    if (portal && portal.success && portal.tempPassword) {
+      window.prompt('Client created. Copy the portal password and send it to ' + data.email + ':', portal.tempPassword);
+    } else {
+      showToast('Client created. Portal: ' + ((portal && portal.message) || 'could not create portal login'), 'info');
+    }
   }
 
   // ═══ INVOICES ═══

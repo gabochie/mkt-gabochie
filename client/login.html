@@ -57,6 +57,10 @@
       <h1 class="text-2xl font-bold text-body-text mb-2">Welcome Back</h1>
       <p class="text-gray-500 mb-6">Sign in to track your Google Maps optimization progress</p>
 
+      <div id="portalNote" class="hidden mb-4 p-3 bg-accent/20 text-primary rounded-lg text-sm">
+        We filled in the temporary password from your purchase. Sign in, then ask us to change it.
+      </div>
+
       <form id="loginForm" onsubmit="handleLogin(event)">
         <!-- honeypot -->
         <input type="text" name="hp_website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
@@ -107,7 +111,7 @@
       </div>
 
       <div class="mt-4 text-center">
-        <a href="#" onclick="showForgotPassword()" class="text-sm text-primary hover:underline">Forgot password?</a>
+        <a href="https://wa.me/233506384917?text=Hi%2C%20I%20need%20help%20resetting%20my%20client%20portal%20password." target="_blank" rel="noopener" class="text-sm text-primary hover:underline">Forgot password? Contact support</a>
       </div>
     </div>
 
@@ -115,24 +119,6 @@
     <div class="mt-8 text-center">
       <p class="text-sm text-gray-400">Need help accessing your account?</p>
       <a href="mailto:gabochiemarketing@gmail.com" class="text-sm text-primary hover:underline">Contact support</a>
-    </div>
-  </div>
-
-  <!-- Forgot Password Modal -->
-  <div id="forgotModal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
-    <div class="fixed inset-0 bg-gray-900/75" onclick="hideForgotPassword()"></div>
-    <div class="fixed inset-0 z-10 overflow-y-auto">
-      <div class="flex min-h-full items-center justify-center p-4">
-        <div class="relative bg-white rounded-2xl p-6 max-w-sm w-full">
-          <h3 class="text-lg font-bold text-body-text mb-2">Reset Password</h3>
-          <p class="text-gray-500 text-sm mb-4">Enter your email and we'll send you a password reset link.</p>
-          <input type="email" id="resetEmail" class="w-full px-4 py-3 rounded-xl border border-gray-300 mb-4" placeholder="you@business.com">
-          <div class="flex gap-3">
-            <button onclick="hideForgotPassword()" class="flex-1 py-2 rounded-xl border border-gray-300 font-medium hover:bg-gray-50">Cancel</button>
-            <button onclick="sendResetLink()" class="flex-1 py-2 rounded-xl bg-primary text-white font-medium hover:bg-dark-green">Send Link</button>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -179,6 +165,7 @@
             businessName: result.businessName
           }));
           
+          localStorage.removeItem('pendingClientAccess');
           // Redirect to dashboard
           window.location.href = 'dashboard.html';
         } else {
@@ -218,23 +205,16 @@
       }
     }
 
-    function showForgotPassword() {
-      document.getElementById('forgotModal').classList.remove('hidden');
-    }
-
-    function hideForgotPassword() {
-      document.getElementById('forgotModal').classList.add('hidden');
-    }
-
-    function sendResetLink() {
-      const email = document.getElementById('resetEmail').value;
-      if (!email) {
-        alert('Please enter your email');
-        return;
+    // Prefill credentials from a recent package purchase
+    try {
+      const pending = JSON.parse(localStorage.getItem('pendingClientAccess') || 'null');
+      if (pending && pending.email) {
+        document.getElementById('email').value = pending.email;
+        document.getElementById('password').value = pending.tempPassword || '';
+        const note = document.getElementById('portalNote');
+        if (note) note.classList.remove('hidden');
       }
-      alert('Password reset link sent to ' + email);
-      hideForgotPassword();
-    }
+    } catch (_) {}
 
     // Check if already logged in
     const client = localStorage.getItem('gabochieClient');
