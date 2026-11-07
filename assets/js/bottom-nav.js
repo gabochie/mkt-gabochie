@@ -39,6 +39,8 @@
       '#gb-bottom-nav a:active .gb-ico{transform:scale(.88);}' +
       '#gb-bottom-nav a .gb-ico svg{width:24px;height:24px}' +
       'body{padding-bottom:calc(70px + env(safe-area-inset-bottom)) !important;}' +
+      'html,body{overflow-x:hidden;}' +
+      'input,select,textarea{font-size:16px !important;}' +
       '.fixed.bottom-6.right-6{display:none !important;}' +
       '#pwa-install{bottom:calc(86px + env(safe-area-inset-bottom)) !important;}' +
       '.gb-hide-mobile{display:none !important;}' +
