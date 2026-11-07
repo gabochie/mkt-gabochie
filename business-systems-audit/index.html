@@ -62,6 +62,13 @@
       }
     }
   </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6Z53BKZ0FR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6Z53BKZ0FR');
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -71,7 +78,7 @@
     .opt input { position: absolute; opacity: 0; pointer-events: none; }
     .opt span.pill {
       display: block; border: 1.5px solid #e5e7eb; border-radius: 0.75rem;
-      padding: 0.65rem 0.9rem; font-size: 0.9rem; color: #374151;
+      padding: 0.78rem 0.95rem; font-size: 0.95rem; color: #374151;
       transition: border-color .15s, background .15s, box-shadow .15s;
     }
     .opt:hover span.pill { border-color: #a8e07a; }
@@ -699,6 +706,7 @@
         top: top.map(function (g) { return g.name; }),
         answers: answers, domainScores: domainScores, summary: summary
       };
+      if (window.gtag) gtag('event', 'scorecard_complete', { band: band.name, score: pct, leak_pct: leakPct });
 
       var result = document.getElementById('result');
       result.classList.remove('hidden');
@@ -745,6 +753,7 @@
           notes: notes
         })
       }).then(function () {
+        if (window.gtag) gtag('event', 'generate_lead', { form: 'revenue_leak_scorecard', band: lastResult.band, score: lastResult.pct });
         msg.textContent = 'Sent. We will reach out within one business day — or message us now on WhatsApp.';
         msg.className = 'sm:col-span-2 text-sm text-primary';
         btn.textContent = 'Sent';
