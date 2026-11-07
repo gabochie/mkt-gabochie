@@ -65,7 +65,7 @@
       <p class="text-gray-500 mb-6">Sign in to track your Google Maps optimization progress</p>
 
       <div id="portalNote" class="hidden mb-4 p-3 bg-accent/20 text-primary rounded-lg text-sm">
-        We filled in the temporary password from your purchase. Sign in, then ask us to change it.
+        We filled in the temporary password from your purchase. Sign in — you can change it anytime from your dashboard.
       </div>
 
       <form id="loginForm" onsubmit="handleLogin(event)">
@@ -118,7 +118,7 @@
       </div>
 
       <div class="mt-4 text-center">
-        <a href="https://wa.me/233506384917?text=Hi%2C%20I%20need%20help%20resetting%20my%20client%20portal%20password." target="_blank" rel="noopener" class="text-sm text-primary hover:underline">Forgot password? Contact support</a>
+        <button type="button" onclick="showResetModal()" class="text-sm text-primary hover:underline">Forgot password?</button>
       </div>
     </div>
 
@@ -126,6 +126,26 @@
     <div class="mt-8 text-center">
       <p class="text-sm text-gray-400">Need help accessing your account?</p>
       <a href="mailto:gabochiemarketing@gmail.com" class="text-sm text-primary hover:underline">Contact support</a>
+    </div>
+  </div>
+
+
+  <!-- Reset Password Modal -->
+  <div id="resetModal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="resetTitle">
+    <div class="fixed inset-0 bg-gray-900/75" onclick="closeResetModal()"></div>
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+      <div class="flex min-h-full items-center justify-center p-4">
+        <div class="relative bg-white rounded-2xl p-6 max-w-sm w-full">
+          <h3 id="resetTitle" class="text-lg font-bold text-body-text mb-2">Reset your password</h3>
+          <p class="text-gray-500 text-sm mb-4">Enter the email you used at purchase. We'll email you a new temporary password.</p>
+          <input id="resetEmail" type="email" autocomplete="email" placeholder="you@business.com"
+            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition">
+          <div id="resetMsg" class="hidden mt-3 p-3 rounded-lg text-sm"></div>
+          <button id="resetBtn" onclick="submitReset()" class="w-full mt-4 bg-primary text-white py-3 rounded-xl font-semibold hover:bg-dark-green transition">Email me a new password</button>
+          <button type="button" onclick="closeResetModal()" class="w-full mt-2 text-sm text-gray-500 hover:text-gray-700 py-2">Cancel</button>
+          <p class="text-xs text-gray-400 text-center mt-3">No email? <a href="https://wa.me/233506384917?text=Hi%2C%20I%20need%20help%20resetting%20my%20client%20portal%20password." target="_blank" rel="noopener" class="text-primary underline">Message us on WhatsApp</a></p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -222,6 +242,57 @@
         if (note) note.classList.remove('hidden');
       }
     } catch (_) {}
+
+
+    function showResetModal() {
+      const m = document.getElementById('resetModal');
+      const email = document.getElementById('email').value;
+      document.getElementById('resetEmail').value = email || '';
+      const msg = document.getElementById('resetMsg');
+      msg.className = 'hidden mt-3 p-3 rounded-lg text-sm';
+      msg.textContent = '';
+      m.classList.remove('hidden');
+      setTimeout(function () { document.getElementById('resetEmail').focus(); }, 30);
+    }
+
+    function closeResetModal() {
+      document.getElementById('resetModal').classList.add('hidden');
+    }
+
+    async function submitReset() {
+      const email = document.getElementById('resetEmail').value.trim();
+      const msg = document.getElementById('resetMsg');
+      const btn = document.getElementById('resetBtn');
+      if (!email) {
+        msg.className = 'mt-3 p-3 rounded-lg text-sm bg-red-50 text-red-600';
+        msg.textContent = 'Enter your email address.';
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      msg.className = 'hidden mt-3 p-3 rounded-lg text-sm';
+      try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'requestPasswordReset', email: email }),
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const result = await response.json();
+        if (result && result.success) {
+          msg.className = 'mt-3 p-3 rounded-lg text-sm bg-green-50 text-green-700';
+          msg.textContent = result.message || 'If that email is registered, a new password has been sent. Check your inbox and spam folder.';
+        } else {
+          msg.className = 'mt-3 p-3 rounded-lg text-sm bg-amber-50 text-amber-700';
+          msg.textContent = 'Password reset is not active yet. Please message us on WhatsApp and we will reset it for you.';
+        }
+      } catch (err) {
+        msg.className = 'mt-3 p-3 rounded-lg text-sm bg-red-50 text-red-600';
+        msg.textContent = 'Network error. Please try again or message us on WhatsApp.';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Email me a new password';
+      }
+    }
 
     // Check if already logged in
     const client = localStorage.getItem('gabochieClient');
