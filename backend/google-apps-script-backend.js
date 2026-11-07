@@ -119,6 +119,8 @@ function doPost(e) {
     if (data.action === 'clientLogin') return handleClientLogin(data);
     if (data.action === 'getClientDashboard') return getClientDashboard(data);
     if (data.action === 'registerClient') return registerClient(data);
+    if (data.action === 'changeClientPassword') return changeClientPassword_(data);
+    if (data.action === 'requestPasswordReset') return requestPasswordReset_(data);
 
     return handleLeadCapture(data);
   } catch (error) {
@@ -235,7 +237,7 @@ function handleClientLogin(data) {
   const inputHash = hashPassword_(data.password || '');
 
   for (let i = 1; i < values.length; i++) {
-    if (values[i][0] === data.email && values[i][1] === inputHash) {
+    if (String(values[i][0]).trim().toLowerCase() === String(data.email || '').trim().toLowerCase() && values[i][1] === inputHash) {
       const token = Utilities.getUuid();
       sheet.getRange(i + 1, 15).setValue(token);
       return respond({
@@ -253,7 +255,7 @@ function getClientDashboard(data) {
   const values = sheet.getDataRange().getValues();
 
   for (let i = 1; i < values.length; i++) {
-    if (values[i][0] === data.email && values[i][14] === data.token) {
+    if (String(values[i][0]).trim().toLowerCase() === String(data.email || '').trim().toLowerCase() && String(values[i][14]) === String(data.token)) {
       return respond({
         success: true,
         name: values[i][2], businessName: values[i][3],
@@ -308,4 +310,81 @@ function registerClient(data) {
     success: true, message: 'Client registered successfully',
     tempPassword: tempPassword
   });
+}
+
+// ── Self-service password management ──
+
+function findClientRow_(sheet, email) {
+  const values = sheet.getDataRange().getValues();
+  const target = String(email || '').trim().toLowerCase();
+  if (!target) return null;
+  for (let i = 1; i < values.length; i++) {
+    if (String(values[i][0]).trim().toLowerCase() === target) {
+      return { row: i + 1, values: values[i] };
+    }
+  }
+  return null;
+}
+
+function changeClientPassword_(data) {
+  const sheet = getOrCreateSheet(CLIENTS_SHEET, CLIENT_HEADERS);
+  const newPassword = String(data.newPassword || '');
+
+  if (!data.email || !data.token || !data.currentPassword || !newPassword) {
+    return respond({ success: false, message: 'Missing required fields' });
+  }
+  if (newPassword.length < 8) {
+    return respond({ success: false, message: 'New password must be at least 8 characters' });
+  }
+
+  const hit = findClientRow_(sheet, data.email);
+  if (!hit || String(hit.values[14]) !== String(data.token)) {
+    return respond({ success: false, message: 'Session expired. Please sign in again.' });
+  }
+  if (hit.values[1] !== hashPassword_(String(data.currentPassword))) {
+    return respond({ success: false, message: 'Current password is incorrect' });
+  }
+
+  const token = Utilities.getUuid();
+  sheet.getRange(hit.row, 2).setValue(hashPassword_(newPassword));
+  sheet.getRange(hit.row, 15).setValue(token);
+
+  return respond({ success: true, token: token, message: 'Password updated successfully' });
+}
+
+function requestPasswordReset_(data) {
+  const generic = {
+    success: true,
+    message: 'If that email is registered, a new password has been sent.'
+  };
+  const email = String(data.email || '').trim().toLowerCase();
+  if (!email) return respond(generic);
+
+  const sheet = getOrCreateSheet(CLIENTS_SHEET, CLIENT_HEADERS);
+  const hit = findClientRow_(sheet, email);
+  if (!hit) return respond(generic);
+
+  const temp = 'gm-' + Math.random().toString(36).slice(2, 7) + Math.floor(Math.random() * 90 + 10);
+  sheet.getRange(hit.row, 2).setValue(hashPassword_(temp));
+  sheet.getRange(hit.row, 15).setValue(Utilities.getUuid());
+
+  const portalUrl = 'https://mkt.gabochie.com/client/login.html';
+  const firstName = hit.values[2] || 'there';
+  try {
+    MailApp.sendEmail({
+      to: hit.values[0],
+      subject: 'Your Gabochie Client Portal password has been reset',
+      body: 'Hi ' + firstName + ',\n\nYour new temporary password is: ' + temp +
+        '\n\nSign in at ' + portalUrl + ' and change it from your dashboard.\n\nGabochie Marketing',
+      htmlBody: '<p>Hi ' + firstName + ',</p>' +
+        '<p>Your new temporary password is:</p>' +
+        '<p style="font-size:20px;font-weight:bold;letter-spacing:1px;background:#f3f4f6;padding:12px 16px;border-radius:8px;display:inline-block">' + temp + '</p>' +
+        '<p>Sign in at <a href="' + portalUrl + '">' + portalUrl + '</a> and change it from your dashboard.</p>' +
+        '<p>— Gabochie Marketing</p>'
+    });
+  } catch (err) {
+    console.error('Password reset email failed:', err);
+  }
+
+  return respond(generic);
 }

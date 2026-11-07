@@ -58,6 +58,9 @@
         </a>
         <div class="flex items-center gap-4">
           <span id="clientName" class="text-sm font-medium text-gray-600 hidden sm:block"></span>
+          <button onclick="showPasswordModal()" class="text-sm text-gray-500 hover:text-primary transition">
+            Password
+          </button>
           <button onclick="logout()" class="text-sm text-gray-500 hover:text-primary transition">
             Sign Out
           </button>
@@ -291,6 +294,31 @@
     </div>
   </div>
 
+
+  <!-- Change Password Modal -->
+  <div id="passwordModal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="pwTitle">
+    <div class="fixed inset-0 bg-gray-900/75" onclick="closePasswordModal()"></div>
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+      <div class="flex min-h-full items-center justify-center p-4">
+        <div class="relative bg-white rounded-2xl p-6 max-w-sm w-full">
+          <h3 id="pwTitle" class="text-lg font-bold text-body-text mb-2">Change password</h3>
+          <p class="text-gray-500 text-sm mb-4">Choose a new password with at least 8 characters.</p>
+          <form onsubmit="submitPasswordChange(event)" class="space-y-3">
+            <input id="pwCurrent" type="password" autocomplete="current-password" placeholder="Current password" required
+              class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition">
+            <input id="pwNew" type="password" autocomplete="new-password" placeholder="New password" minlength="8" required
+              class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition">
+            <input id="pwConfirm" type="password" autocomplete="new-password" placeholder="Confirm new password" minlength="8" required
+              class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition">
+            <div id="pwMsg" class="hidden p-3 rounded-lg text-sm"></div>
+            <button id="pwBtn" type="submit" class="w-full bg-primary text-white py-3 rounded-xl font-semibold hover:bg-dark-green transition">Update password</button>
+            <button type="button" onclick="closePasswordModal()" class="w-full text-sm text-gray-500 hover:text-gray-700 py-2">Cancel</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzv60aDninIoZRPZtq6yNkMlNq2I3aWrPJT5uMqFNgxgDwdUpRe7kCDoNtcfRvgrVLD/exec';
 
@@ -412,6 +440,76 @@
         '<p class="text-sm mt-2">Please refresh this page. If it continues, ' +
         '<a href="https://wa.me/233506384917?text=Hi%2C%20my%20client%20dashboard%20is%20not%20loading." target="_blank" rel="noopener" class="text-primary underline">message us on WhatsApp</a>.</p>' +
         '</div>';
+    }
+
+
+    function showPasswordModal() {
+      document.getElementById('pwCurrent').value = '';
+      document.getElementById('pwNew').value = '';
+      document.getElementById('pwConfirm').value = '';
+      const msg = document.getElementById('pwMsg');
+      msg.className = 'hidden p-3 rounded-lg text-sm';
+      msg.textContent = '';
+      document.getElementById('passwordModal').classList.remove('hidden');
+      setTimeout(function () { document.getElementById('pwCurrent').focus(); }, 30);
+    }
+
+    function closePasswordModal() {
+      document.getElementById('passwordModal').classList.add('hidden');
+    }
+
+    async function submitPasswordChange(event) {
+      event.preventDefault();
+      const current = document.getElementById('pwCurrent').value;
+      const next = document.getElementById('pwNew').value;
+      const confirm = document.getElementById('pwConfirm').value;
+      const msg = document.getElementById('pwMsg');
+      const btn = document.getElementById('pwBtn');
+
+      function show(kind, text) {
+        msg.className = 'p-3 rounded-lg text-sm ' + (kind === 'ok' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600');
+        msg.textContent = text;
+      }
+
+      if (next.length < 8) return show('err', 'New password must be at least 8 characters.');
+      if (next !== confirm) return show('err', 'New passwords do not match.');
+
+      btn.disabled = true;
+      btn.textContent = 'Updating...';
+      try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'changeClientPassword',
+            email: client.email,
+            token: client.token,
+            currentPassword: current,
+            newPassword: next
+          }),
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const result = await response.json();
+        if (result && result.success) {
+          if (result.token) {
+            client.token = result.token;
+            localStorage.setItem('gabochieClient', JSON.stringify(client));
+          }
+          show('ok', 'Password updated successfully.');
+          document.getElementById('pwCurrent').value = '';
+          document.getElementById('pwNew').value = '';
+          document.getElementById('pwConfirm').value = '';
+          setTimeout(closePasswordModal, 1400);
+        } else if (result && result.message) {
+          show('err', result.message);
+        } else {
+          show('err', 'Password change is not active yet. Please message us on WhatsApp.');
+        }
+      } catch (err) {
+        show('err', 'Network error. Please try again.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Update password';
+      }
     }
 
     function logout() {
