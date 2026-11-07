@@ -19,6 +19,8 @@
     return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + icons[name] + '</svg>';
   }
   var css = '' +
+    'body{animation:gbFadeIn .28s ease-out both;}' +
+    '@keyframes gbFadeIn{from{opacity:0}to{opacity:1}}' +
     '#gb-bottom-nav{display:none}' +
     '@media (max-width:767px){' +
       '#gb-bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:55;background:rgba(255,255,255,.97);' +
@@ -26,15 +28,22 @@
         'padding:4px 6px calc(4px + env(safe-area-inset-bottom));justify-content:space-around;align-items:flex-end;' +
         'box-shadow:0 -4px 20px rgba(0,0,0,.06);}' +
       '#gb-bottom-nav a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;' +
-        'color:#6b7280;font:600 10.5px/1.2 system-ui,-apple-system,sans-serif;padding:3px 0;-webkit-tap-highlight-color:transparent;}' +
+        'color:#6b7280;font:600 10.5px/1.2 system-ui,-apple-system,sans-serif;padding:3px 0;-webkit-tap-highlight-color:transparent;' +
+        'transition:transform .12s ease,color .15s ease;}' +
+      '#gb-bottom-nav a:active{transform:scale(.9);}' +
       '#gb-bottom-nav a svg{width:22px;height:22px}' +
       '#gb-bottom-nav a.gb-active{color:#1A7B3A}' +
       '#gb-bottom-nav a .gb-ico{width:46px;height:46px;border-radius:50%;background:#1A7B3A;color:#fff;display:flex;' +
-        'align-items:center;justify-content:center;margin-top:-22px;box-shadow:0 6px 16px rgba(26,123,58,.42);border:3px solid #fff;}' +
+        'align-items:center;justify-content:center;margin-top:-22px;box-shadow:0 6px 16px rgba(26,123,58,.42);border:3px solid #fff;' +
+        'transition:transform .12s ease;}' +
+      '#gb-bottom-nav a:active .gb-ico{transform:scale(.88);}' +
       '#gb-bottom-nav a .gb-ico svg{width:24px;height:24px}' +
       'body{padding-bottom:calc(70px + env(safe-area-inset-bottom)) !important;}' +
       '.fixed.bottom-6.right-6{display:none !important;}' +
       '#pwa-install{bottom:calc(86px + env(safe-area-inset-bottom)) !important;}' +
+      '.gb-hide-mobile{display:none !important;}' +
+      '.gb-topnav{transition:transform .28s ease;will-change:transform;}' +
+      '.gb-topnav.gb-nav-up{transform:translateY(-100%);}' +
     '}' +
     '@media (min-width:768px){#gb-bottom-nav{display:none !important}}';
   function render() {
@@ -53,6 +62,7 @@
     document.body.appendChild(nav);
     markActive();
     window.addEventListener('hashchange', markActive);
+    enhance();
   }
   function markActive() {
     var path = location.pathname.replace(/index\.html$/, '/');
@@ -67,6 +77,46 @@
       links[i].classList.toggle('gb-active', active);
       if (active) links[i].setAttribute('aria-current', 'page'); else links[i].removeAttribute('aria-current');
     }
+  }
+  function enhance() {
+    try {
+      var topnav = document.querySelector('nav.fixed.top-0') || document.querySelector('nav.fixed');
+      if (topnav) {
+        topnav.classList.add('gb-topnav');
+        var anchors = topnav.querySelectorAll('a');
+        for (var j = 0; j < anchors.length; j++) {
+          var mark = anchors[j].querySelector('svg');
+          var span = anchors[j].querySelector('span');
+          if (mark && span && anchors[j].className && String(anchors[j].className).indexOf('flex') !== -1) {
+            span.classList.add('gb-hide-mobile');
+            break;
+          }
+        }
+      }
+      var ham = document.querySelectorAll('nav button[onclick*="mobile-menu"]');
+      for (var k = 0; k < ham.length; k++) ham[k].classList.add('gb-hide-mobile');
+      var mm = document.getElementById('mobile-menu');
+      if (mm) mm.classList.add('gb-hide-mobile');
+      var mq = window.matchMedia('(max-width:767px)');
+      if (topnav) {
+        var lastY = window.scrollY || 0, ticking = false;
+        window.addEventListener('scroll', function () {
+          if (!mq.matches) { topnav.classList.remove('gb-nav-up'); return; }
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(function () {
+            var y = window.scrollY || 0;
+            if (y > 96 && y > lastY + 6) topnav.classList.add('gb-nav-up');
+            else if (y < lastY - 6 || y < 96) topnav.classList.remove('gb-nav-up');
+            lastY = y; ticking = false;
+          });
+        }, { passive: true });
+      }
+      var navEl = document.getElementById('gb-bottom-nav');
+      if (navEl) navEl.addEventListener('click', function () {
+        if (navigator.vibrate) { try { navigator.vibrate(8); } catch (e) {} }
+      });
+    } catch (e) {}
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render);
   else render();
