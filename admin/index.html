@@ -1859,10 +1859,45 @@
     } catch (_) {}
 
     if (portal && portal.success && portal.tempPassword) {
-      window.prompt('Client created. Copy the portal password and send it to ' + data.email + ':', portal.tempPassword);
+      showPortalPassword(data.email, portal.tempPassword);
     } else {
       showToast('Client created. Portal: ' + ((portal && portal.message) || 'could not create portal login'), 'info');
     }
+  }
+
+  function showPortalPassword(email, password) {
+    const prev = document.getElementById('portalPwModal');
+    if (prev) prev.remove();
+    const safe = function (s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    };
+    const wrap = document.createElement('div');
+    wrap.className = 'modal-overlay open';
+    wrap.id = 'portalPwModal';
+    wrap.innerHTML = '<div class="modal" style="max-width:440px">' +
+      '<h3>Client created</h3>' +
+      '<p style="font-size:13px;color:#64748b;margin-bottom:14px">Send these portal details to <strong>' + safe(email) + '</strong>. The password is shown only once.</p>' +
+      '<label>Portal password</label>' +
+      '<div style="display:flex;gap:8px;margin-bottom:6px">' +
+        '<input id="portalPwValue" readonly value="' + safe(password) + '" style="font-family:ui-monospace,monospace;font-size:15px;letter-spacing:.6px">' +
+        '<button type="button" class="btn btn-outline" id="portalPwCopy" style="white-space:nowrap">Copy</button>' +
+      '</div>' +
+      '<p style="font-size:12px;color:#64748b">Login at /client/login.html. Contact support to change the password.</p>' +
+      '<div class="modal-actions"><button type="button" class="btn btn-primary" id="portalPwDone">Done</button></div>' +
+      '</div>';
+    document.body.appendChild(wrap);
+    const close = function () { wrap.remove(); };
+    wrap.querySelector('#portalPwDone').addEventListener('click', close);
+    wrap.addEventListener('click', function (e) { if (e.target === wrap) close(); });
+    wrap.querySelector('#portalPwCopy').addEventListener('click', function () {
+      const input = wrap.querySelector('#portalPwValue');
+      input.select();
+      try { document.execCommand('copy'); } catch (_) {}
+      if (navigator.clipboard) navigator.clipboard.writeText(password).catch(function () {});
+      this.textContent = 'Copied';
+    });
   }
 
   // ═══ INVOICES ═══
